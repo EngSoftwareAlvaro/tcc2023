@@ -1,0 +1,12 @@
+# Arquivos e diretórios específicos para projetos Node.js
+node_modules/
+package-lock.json
+npm-debug.log
+yarn-error.log
+
+# Arquivos de ambiente (geralmente .env)
+.env
+
+# Arquivos de construção e distribuição (dependendo do seu caso)
+dist/
+build/
