@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Jogador</title>
+    <style>
+        body {
+    background-color: #001f3f;
+    /* Azul marinho */
+    color: #FFFFFF;
+    /* Branco para o texto */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.player-page {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #002D62;
+    /* Azul marinho mais escuro */
+    border-radius: 5px;
+}
+
+.player-details {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.player-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.player-name img {
+    width: 200px;
+    height: 200px;
+    margin-right: 10px;
+}
+
+.player-info {
+    font-size: 18px;
+}
+
+.stats-heading {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #FFFFFF;
+    /* Branco */
+}
+
+.stats-table th {
+    background-color: #FF4500;
+    /* Laranja */
+}
+
+.stats-table tbody tr:nth-child(even) {
+    background-color: #001845;
+    /* Azul marinho mais escuro */
+}
+
+.stats-table tbody tr:nth-child(odd) {
+    background-color: #003C8F;
+    /* Azul marinho médio */
+}
+
+.stats-table tbody td {
+    color: #FFFFFF;
+    /* Branco para o texto */
+}
+    </style>
+</head>
+<body>
+    <div class="player-page">
+        <div class="player-details">
+            <h1 class="player-name">
+                <img src="https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/6430.png" alt="Foto do jogador">
+                <%= jogador.nome %> <%= jogador.sobrenome %> 
+            </h1>
+            <p class="player-info">Altura: <%= jogador.altura %>m | Número: <%= jogador.camisa %> | Posição: <%= jogador.posicao %> | Aniversário: <%= jogador.idade.toLocaleDateString()      %></p>
+        </div>
+        <div class="player-stats">
+            <h2 class="stats-heading">Estatísticas</h2>
+            <div style="overflow-x: auto;">
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Total Jogos</th>
+                            <th>Pontos</th>
+                            <th>Assistências</th>
+                            <th>Rebotes</th>
+                            <th>Arremessos</th>
+                            <th>Arremessos certos</th>
+                            <th>Tentativas 3 pontos</th>
+                            <th>Acertos 3 pontos</th>
+                            <th>Tentativas 2 pontos</th>
+                            <th>Acertos 2 pontos</th>
+                            <th>Lances Livres</th>
+                            <th>Acertos lances livres</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para calcular a idade com base na data de nascimento
+        function calculateAge(dateOfBirth) {
+            const birthDate = new Date(dateOfBirth);
+            const currentDate = new Date();
+            let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+            // Verificar se ainda não completou o aniversário no ano atual
+            if (currentDate.getMonth() < birthDate.getMonth() ||
+                (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            return age;
+        }
+    </script>
+</body>
+</html>
