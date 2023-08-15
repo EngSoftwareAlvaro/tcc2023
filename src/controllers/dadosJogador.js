@@ -5,7 +5,7 @@ const getAllPlayers = async () => {
     try {
         const response = await axios.get('https://api-nba-v1.p.rapidapi.com/players', {
             params: {
-                team: '14',
+                team: '',
                 season: '2022'
             },
             headers: {
@@ -20,7 +20,7 @@ const getAllPlayers = async () => {
         const players = response.data.response.map(player => {
             return {
                 idJogador: player.id,
-                idTime: 30,
+                idTime: 0,
                 nome: player.firstname,
                 sobrenome: player.lastname,
                 idade: player.birth.date,

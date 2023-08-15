@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Inclua o Materialize CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            background-color: #001f3f;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .teams-list {
+            background-color: #002D62;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .teams-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .teams-table td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .team-logo {
+            max-width: 50px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="teams-list">
+        <h2>Equipes</h2>
+        <table class="teams-table">
+            <tbody>
+                <% for (let i = 0; i < times.length; i++) { %>
+                    <% if (i % 6 === 0) { %>
+                        <tr>
+                    <% } %>
+                    <td>
+                        <img class="team-logo" src="<%= times[i].logo %>" alt="Logo do Time">
+                        <p><%= times[i].nome %></p>
+                    </td>
+                    <% if (i % 6 === 5 || i === times.length - 1) { %>
+                        </tr>
+                    <% } %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Inclua o Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

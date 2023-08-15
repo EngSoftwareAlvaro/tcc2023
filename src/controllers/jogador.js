@@ -1,11 +1,13 @@
 class Jogador {
-    constructor(id, nome, altura, idade, posicao, idStatsJogadores) {
-      this.id = id;
+    constructor(idJogador, idTime, nome, sobrenome, idade, altura, posicao, camisa) {
+      this.idJogador = idJogador;
+      this.idTime = idTime;
       this.nome = nome;
-      this.altura = altura;
+      this.sobrenome = sobrenome;
       this.idade = idade;
+      this.altura = altura;
       this.posicao = posicao;
-      this.idStatsJogadores = idStatsJogadores;
+      this.camisa = camisa;
     }
   }
   
