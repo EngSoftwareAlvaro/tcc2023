@@ -5,6 +5,10 @@
     <!-- Inclua o Materialize CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
+    <!-- Inclua o FullCalendar CSS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
+    
+    
     <style>
         body {
             background-color: #001f3f;
@@ -18,42 +22,33 @@
             background-color: #002D62;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            text-align: center;
             border-radius: 5px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin: 20px auto;
         }
 
         .team-card img {
             max-width: 100px;
             height: auto;
         }
+
         
-        /* Adicione um espaçamento nas células da tabela */
-        #team-info td {
-            padding: 10px;
-        }
 
         .table-container {
             background-color: #002D62;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
             border-radius: 5px;
-        }
-
-        .tables {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
+            margin: 20px auto;
         }
 
         .player-table, .stats-table {
             border-collapse: collapse;
             margin-top: 10px;
             color: #FFFFFF;
+            width: 100%;
         }
 
         .player-table th, .player-table td,
@@ -79,80 +74,170 @@
             background-color: #001845;
             color: #FFFFFF;
         }
+
+        /* Adicione estilos para telas menores */
+        @media screen and (max-width: 992px) {
+            .team-card {
+                padding: 10px;
+                margin: 10px auto;
+            }
+            .team-card img {
+                max-width: 70px;
+            }
+            .table-container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+        }
     </style>
-</head>
-<body>
-    <div class="team-card">
-        <img src="<%= time.logo %>" alt="Logo do Time">
-        <h2><%= time.nome %></h2>
-        <table id="team-info"></table>
-        <tr>
-            <td>Sigla: <%= time.sigla %></td>
-            <td>Cidade: <%= time.cidade %></td>
-        </tr>
-        <tr>
-            <td>Conferência: <%= time.conferencia %></td>
-            <td>Arena: <%= time.arena %></td>
-        </tr>
-        <p>Títulos: <%= time.titulos %></p>
-    </div>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="team-card">
+                        <img src="<%= time.logo %>" alt="Logo do Time">
+                        <h2><%= time.nome %></h2>
+                        <table class="team-info">
+                            <tr>
+                                <td>Sigla:</td>
+                                <td><%= time.sigla %></td>
+                            </tr>
+                            <tr>
+                                <td>Cidade:</td>
+                                <td><%= time.cidade %></td>
+                            </tr>
+                            <tr>
+                                <td>Conferência:</td>
+                                <td><%= time.conferencia %></td>
+                            </tr>
+                            <tr>
+                                <td>Arena:</td>
+                                <td><%= time.arena %></td>
+                            </tr>
+                            <tr>
+                                <td>Títulos:</td>
+                                <td><%= time.titulos %></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col s12 m6">
+                    <div class="card">
+                        <div class="card-content">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     
-    <div class="table-container">
-        <div><h3>Elenco</h3></div>
-        <table class="player-table">
-            <tr>
-                <th>Nome do Jogador</th>
-                <th>Posição</th>
-            </tr>
-            <% jogadores.forEach(jogador => { %>
-                <tr>
-                    <td><%= jogador.nome %> <%= jogador.sobrenome %></td>
-                    <td><%= jogador.posicao %></td>
-                </tr>
-            <% }); %>
-        </table>
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="table-container">
+                        <div><h3>Estatísticas do Time</h3></div>
+                        <table class="stats-table">
+                            <% if (estatisticasDoTime) { %>
+                                <tr>
+                                    <th>Pontos</th>
+                                    <td><%= estatisticasDoTime.pontos %></td>
+                                </tr>
+                                <tr>
+                                    <th>Assistências</th>
+                                    <td><%= estatisticasDoTime.assistencias %></td>
+                                </tr>
+                                <tr>
+                                    <th>Rebotes</th>
+                                    <td><%= estatisticasDoTime.rebotes %></td>
+                                </tr>
+                                <tr>
+                                    <th>Tentativas 3 Pontos</th>
+                                    <td><%= estatisticasDoTime.tentativas3pt %></td>
+                                </tr>
+                                <tr>
+                                    <th>Conversão 3 Pontos</th>
+                                    <td><%= estatisticasDoTime.acerto3pt %>%</td>
+                                </tr>
+                                <tr>
+                                    <th>Tentativas 2 Pontos</th>
+                                    <td><%= estatisticasDoTime.tentativas2pt %></td>
+                                </tr>
+                                <tr>
+                                    <th>Conversão 2 Pontos</th>
+                                    <td><%= estatisticasDoTime.acertos2pt %>%</td>
+                                </tr>
+                                <tr>
+                                    <th>Tentativas de Arremesso</th>
+                                    <td><%= estatisticasDoTime.tentativas %></td>
+                                </tr>
+                                <tr>
+                                    <th>Conversão de Arremesso</th>
+                                    <td><%= estatisticasDoTime.acertos %>%</td>
+                                </tr>
+                                <tr>
+                                    <th>Tentativas Lance Livre</th>
+                                    <td><%= estatisticasDoTime.tentativasLL %></td>
+                                </tr>
+                                <tr>
+                                    <th>Conversão Lance Livre</th>
+                                    <td><%= estatisticasDoTime.acertosLL %>%</td>
+                                </tr>
+                                <tr>
+                                    <th>Média de Faltas</th>
+                                    <td><%= estatisticasDoTime.faltas %></td>
+                                </tr>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="2">Nenhuma estatística disponível</td>
+                                </tr>
+                            <% } %>
+                        </table>
+                    </div>
+                </div>
+                <div class="col s12 m6">
+                    <div class="table-container">
+                        <div><h3>Elenco</h3></div>
+                        <table class="player-table">
+                            <tr>
+                                <th>Nome do Jogador</th>
+                                <th>Posição</th>
+                            </tr>
+                            <% jogadores.forEach(jogador => { %>
+                                <tr>
+                                    <td>
+                                        <a href="/jogador/<%= time.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                    </td>
+                                    <td><%= jogador.posicao %></td>
+                                </tr>
+                            <% }); %>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            dateClick: function(info) {
+                var clickedDate = info.dateStr;
+                window.location.href = '/partidas?data=' + clickedDate;
+            }
+        });
+
+        calendar.render();
+    });
+</script>
+
+        <!-- Inclua o FullCalendar CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.7.2/main.min.css">
+
+        <!-- Inclua o FullCalendar JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.7.2/main.min.js"></script>
         
-        <div><h3>Estatísticas do Time</h3></div>
-        <table class="stats-table">
-            <tr>
-                <th>Pontos</th>
-                <th>Assistências</th>
-                <th>Rebotes</th>
-                <th>Tentativas 3 Pontos</th>
-                <th>Conversão 3 Pontos</th>
-                <th>Tentativas 2 Pontos</th>
-                <th>Conversão 2 Pontos</th>
-                <th>Tentativas de Arremesso</th>
-                <th>Conversão de Arremesso</th>
-                <th>Tentativas Lance Livre</th>
-                <th>Conversão Lance Livre</th>
-                <th>Média de Faltas</th>
-            </tr>
-            <% if (estatisticasDoTime) { %>
-                <tr>
-                    <td><%= estatisticasDoTime.pontos %></td>
-                    <td><%= estatisticasDoTime.assistencias %></td>
-                    <td><%= estatisticasDoTime.rebotes %></td>
-                    <td><%= estatisticasDoTime.tentativas3pt %></td>
-                    <td><%= estatisticasDoTime.acerto3pt %>%</td>
-                    <td><%= estatisticasDoTime.tentativas2pt %></td>
-                    <td><%= estatisticasDoTime.acertos2pt %>%</td>
-                    <td><%= estatisticasDoTime.tentativas %></td>
-                    <td><%= estatisticasDoTime.acertos %>%</td>
-                    <td><%= estatisticasDoTime.tentativasLL %></td>
-                    <td><%= estatisticasDoTime.acertosLL %>%</td>
-                    <td><%= estatisticasDoTime.faltas %></td>
-                </tr>                
-            <% } else { %>
-                <tr>
-                    <td colspan="12">Nenhuma estatística disponível</td>
-                </tr>
-            <% } %>
-        </table>
-    </div>
-
-
-    <!-- Inclua o Materialize JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-</body>
-</html>
+    </body>
+    </html>
