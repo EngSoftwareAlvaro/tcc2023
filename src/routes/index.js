@@ -155,6 +155,49 @@ app.get('/jogador/:timeId/:jogadorId', (req, res) => {
     });
 });
 
+
+app.get('/partida/:idPartida', async (req, res) => {
+  const idPartida = req.params.idPartida;
+
+  // Consulta para obter os detalhes da partida
+  const partida = await db.query('SELECT * FROM partidas WHERE idPartida = ?', [idPartida]);
+
+  if (partida.length === 0) {
+      // Partida não encontrada
+      return res.status(404).send('Partida não encontrada');
+  }
+
+  const partidaInfo = partida[0];
+
+  // Consulta para obter os detalhes do time A (home)
+  const timeADetails = await db.query('SELECT * FROM time WHERE idTime = ?', [partidaInfo.home]);
+
+  // Consulta para obter os detalhes do time B (visitor)
+  const timeBDetails = await db.query('SELECT * FROM time WHERE idTime = ?', [partidaInfo.visitor]);
+
+  const timeALineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.home]);
+  const timeBLineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.visitor]);
+  
+  const statsTA = await db.query('SELECT * FROM statstime WHERE idTime = ?', [partidaInfo.home]);
+  const statsTB = await db.query('SELECT * FROM statstime WHERE idTime = ?', [partidaInfo.visitor]);
+  if (timeADetails.length === 0 || timeBDetails.length === 0) {
+      // Um ou ambos os times não foram encontrados
+      return res.status(404).send('Um ou ambos os times não foram encontrados');
+  }
+
+  const timeA = timeADetails[0];
+  const timeB = timeBDetails[0];
+
+  console.log(statsTA);
+  console.log(statsTB);
+  // Renderize a página da partida e passe os dados da partida e dos times para o modelo
+  res.render('partida', { partida: partidaInfo, timeA, timeB,timeALineup, timeBLineup, statsTA, statsTB });
+});
+
+
+
+
+
 app.listen(3000, () => {
   console.log('Servidor iniciado na porta 3000');
 });

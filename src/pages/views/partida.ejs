@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Adicione outros links de estilo, se necessário -->
+    <style>
+        body {
+            background-color: #001f3f;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #002D62;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        .game-heading {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    
+        .game-card {
+            display: flex;
+            /* Alterado para exibir os times lado a lado */
+            background-color: #002D62;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .team-column {
+            flex: 1;
+            /* Cada coluna ocupa 50% do espaço */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .team-card {
+            background-color: #003C8F;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 10px;
+            min-height: 200px; /* Altura mínima definida */
+            min-width: 200px; /* Largura mínima definida */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; /* Centraliza o conteúdo horizontalmente */
+        }
+    
+        .team-card img {
+            max-width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    
+        .versus-heading {
+            font-size: 32px;
+            align-self: center;
+            margin: 0 20px;
+        }
+    
+        .roster-section {
+            background-color: #002D62;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+            display: none; /* Inicialmente oculta */
+            /* Outras propriedades de estilo da sua seção */
+            justify-content: space-between; /* Distribui o espaço igualmente entre as colunas */
+        }
+
+        .team-table{
+            margin: 50px;
+        }
+
+        /* Estilo para as células da tabela dentro de .team-table */
+        .team-table th,
+        .team-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            color: #FFFFFF; /* Cor do texto branco */
+        }
+
+        /* Estilo para linhas pares da tabela dentro de .team-table */
+        .team-table tbody tr:nth-child(even) {
+            background-color: #001845;
+        }
+
+        /* Estilo para linhas ímpares da tabela dentro de .team-table */
+        .team-table tbody tr:nth-child(odd) {
+            background-color: #003C8F;
+        }
+
+        .game-infos {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Estilo para o título "Elenco dos Times e Prognósticos" */
+        .roster-heading {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #FFFFFF;
+        }
+
+        /* Novo estilo para o título "Estatísticas dos Times" */
+        .stats-heading {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #FFFFFF;
+        }
+
+        /* Estilo para o contêiner de estatísticas dos times */
+.stats-section {
+    background-color: #002D62;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    text-align: center;
+    display: none; /* Inicialmente oculta */
+    /* Outras propriedades de estilo da sua seção */
+    justify-content: space-between; /* Distribui o espaço igualmente entre as colunas */
+    /* Remova a altura mínima e o espaço superior e inferior */
+}
+
+/* Estilo para as células da tabela dentro de .stats-table */
+.stats-table th,
+.stats-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    color: #FFFFFF; /* Cor do texto branco */
+}
+
+.stats-table {
+    margin-left: 200px; /* Remova a margem para evitar espaçamento extra */
+    margin-right: 200px;
+}
+
+/* Estilo para linhas pares da tabela dentro de .stats-table */
+.stats-table tbody tr:nth-child(even) {
+    background-color: #001845;
+}
+
+/* Estilo para linhas ímpares da tabela dentro de .stats-table */
+.stats-table tbody tr:nth-child(odd) {
+    background-color: #003C8F;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-details">
+            <h2 class="game-heading">Detalhes da Partida</h2>
+            
+            <!-- Card para informações da partida -->
+            <div class="game-card">
+                <div class="team-column">
+                    <div class="team-card">
+                        <a href="/time/<%= timeA.idTime %>">
+                            <img src="<%= timeA.logo %>" alt="Logo do Time A">
+                        </a>
+                        <h3 class="team-heading"><%= timeA.nome %></h3>
+                        <!-- Adicione outras informações do Time A aqui -->
+                    </div>
+                </div>
+                <div class="versus-heading">x</div>
+                <div class="team-column">
+                    <div class="team-card">
+                        <a href="/time/<%= timeB.idTime %>">
+                            <img src="<%= timeB.logo %>" alt="Logo do Time B">
+                        </a>
+                        <h3 class="team-heading"><%= timeB.nome %></h3>
+                        <!-- Adicione outras informações do Time B aqui -->
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- Informações da partida (aparece apenas uma vez) -->
+            <p class="game-infos">Data: <%= partida.date.toLocaleDateString() %> | Local: <%= timeA.arena %></p>
+            
+            <!-- Seção para as estatísticas dos times (inicialmente oculta) -->
+            <h2 class="stats-heading" id="toggle-stats">Estatísticas</h2>
+            <div class="stats-section" id="stats-section">
+                <div class="stats-table">
+                    <table class="time-table">
+                        <% if (statsTA) { %>
+                            <tr>
+                                <th>Pontos</th>
+                                <td><%= statsTA[0].pontos %></td>
+                            </tr>
+                            <tr>
+                                <th>Assistências</th>
+                                <td><%= statsTA[0].assistencias %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes</th>
+                                <td><%= statsTA[0].rebotes %></td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas 3 Pontos</th>
+                                <td><%= statsTA[0].tentativas3pt %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão 3 Pontos</th>
+                                <td><%= statsTA[0].acerto3pt %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas 2 Pontos</th>
+                                <td><%= statsTA[0].tentativas2pt %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão 2 Pontos</th>
+                                <td><%= statsTA[0].acertos2pt %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas de Arremesso</th>
+                                <td><%= statsTA[0].tentativas %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão de Arremesso</th>
+                                <td><%= statsTA[0].acertos %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas Lance Livre</th>
+                                <td><%= statsTA[0].tentativasLL %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão Lance Livre</th>
+                                <td><%= statsTA[0].acertosLL %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Média de Faltas</th>
+                                <td><%= statsTA[0].faltas %></td>
+                            </tr>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="2">Nenhuma estatística disponível</td>
+                            </tr>
+                        <% } %>
+                    </table>
+                </div>
+
+                <div class="stats-table">
+                    <table class="time-table">
+                        <% if (statsTB) { %>
+                            <tr>
+                                <th>Pontos</th>
+                                <td><%= statsTB[0].pontos %></td>
+                            </tr>
+                            <tr>
+                                <th>Assistências</th>
+                                <td><%= statsTB[0].assistencias %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes</th>
+                                <td><%= statsTB[0].rebotes %></td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas 3 Pontos</th>
+                                <td><%= statsTB[0].tentativas3pt %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão 3 Pontos</th>
+                                <td><%= statsTB[0].acerto3pt %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas 2 Pontos</th>
+                                <td><%= statsTB[0].tentativas2pt %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão 2 Pontos</th>
+                                <td><%= statsTB[0].acertos2pt %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas de Arremesso</th>
+                                <td><%= statsTB[0].tentativas %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão de Arremesso</th>
+                                <td><%= statsTB[0].acertos %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas Lance Livre</th>
+                                <td><%= statsTB[0].tentativasLL %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão Lance Livre</th>
+                                <td><%= statsTB[0].acertosLL %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Média de Faltas</th>
+                                <td><%= statsTB[0].faltas %></td>
+                            </tr>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="2">Nenhuma estatística disponível</td>
+                            </tr>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Seção para os elencos dos times (inicialmente oculta) -->
+            <h2 class="roster-heading" id="toggle-roster">Elenco e Prognósticos</h2>
+            <div class="roster-section" id="roster-section">
+                <div class="team-table">
+                    <table class="player-table">
+                        <tr>
+                            <th>Jogador</th>
+                            <th>Pontos</th>
+                            <th>Assistências</th>
+                            <th>Rebotes</th>
+                        </tr>
+                        <% timeALineup.forEach(jogador => { %>
+                            <tr>
+                                <td>
+                                    <a href="/jogador/<%= timeA.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                </td>
+                                <!-- Inserir prognosticos de pontos assistencias e rebotes -->
+                                <td><%=  %></td>
+                                <td><%=  %></td>
+                                <td><%=  %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                </div>
+                
+                <div class="team-table">
+                    <table class="player-table">
+                        <tr>
+                            <th>Jogador</th>
+                            <th>Pontos</th>
+                            <th>Assistências</th>
+                            <th>Rebotes</th>
+                        </tr>
+                        <% timeBLineup.forEach(jogador => { %>
+                            <tr>
+                                <td>
+                                    <a href="/jogador/<%= timeB.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                </td>
+                                <!-- Inserir prognosticos de pontos assistencias e rebotes -->
+                                <td><%=  %></td>
+                                <td><%=  %></td>
+                                <td><%=  %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const rosterSection = document.getElementById("roster-section");
+        const toggleRosterButton = document.getElementById("toggle-roster");
+        const statsSection = document.getElementById("stats-section");
+        const toggleStatsButton = document.getElementById("toggle-stats");
+
+        // Função para alternar a visibilidade da seção de elenco dos times
+        function toggleRosterSection() {
+            if (rosterSection.style.display === "none" || rosterSection.style.display === "") {
+                rosterSection.style.display = "flex";
+            } else {
+                rosterSection.style.display = "none";
+            }
+        }
+
+        // Adicione um ouvinte de evento de clique ao título de elenco dos times
+        toggleRosterButton.addEventListener("click", toggleRosterSection);
+
+        // Função para alternar a visibilidade da seção de estatísticas dos times
+        function toggleStatsSection() {
+            if (statsSection.style.display === "none" || statsSection.style.display === "") {
+                statsSection.style.display = "flex";
+            } else {
+                statsSection.style.display = "none";
+            }
+        }
+
+        // Adicione um ouvinte de evento de clique ao título de estatísticas dos times
+        toggleStatsButton.addEventListener("click", toggleStatsSection);
+    </script>
+</body>
+</html>
