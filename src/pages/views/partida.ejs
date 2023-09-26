@@ -322,19 +322,33 @@
                     <table class="player-table">
                         <tr>
                             <th>Jogador</th>
-                            <th>Pontos</th>
-                            <th>Assistências</th>
-                            <th>Rebotes</th>
+                            <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                                <th>Pontos esperados</th>
+                            <th>Assistências esperadas</th>
+                            <th>Rebotes esperados</th>
+                              <% } %>
+                            
                         </tr>
-                        <% timeALineup.forEach(jogador => { %>
+                        <% timeALineup.forEach((jogador, index) => { %>
                             <tr>
                                 <td>
                                     <a href="/jogador/<%= timeA.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
                                 </td>
                                 <!-- Inserir prognosticos de pontos assistencias e rebotes -->
-                                <td><%=  %></td>
-                                <td><%=  %></td>
-                                <td><%=  %></td>
+                                <% if (nextGame && nextGame.length > 0) { %>
+                                    <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                                      <!-- Exibir os prognósticos -->
+                                      <td><%= prognosticosTimeA[index].pontos.toFixed(2) %></td>
+                                      <td><%= prognosticosTimeA[index].assistencias.toFixed(2) %></td>
+                                      <td><%= prognosticosTimeA[index].rebotes.toFixed(2) %></td>
+                                    <% } else { %>
+                                      <!-- Não exibir os prognósticos -->
+                                      
+                                    <% } %>
+                                  <% } else { %>
+                                    <!-- Não exibir os prognósticos -->
+                                    
+                                  <% } %>
                             </tr>
                         <% }); %>
                     </table>
@@ -344,19 +358,31 @@
                     <table class="player-table">
                         <tr>
                             <th>Jogador</th>
-                            <th>Pontos</th>
-                            <th>Assistências</th>
-                            <th>Rebotes</th>
+                            <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                                <th>Pontos esperados</th>
+                                <th>Assistências esperadas</th>
+                                <th>Rebotes esperados</th>
+                              <% } %>
+                            
                         </tr>
-                        <% timeBLineup.forEach(jogador => { %>
+                        <% timeBLineup.forEach((jogador, index) => { %>
                             <tr>
                                 <td>
-                                    <a href="/jogador/<%= timeB.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                    <a href="/jogador/<%= timeA.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
                                 </td>
                                 <!-- Inserir prognosticos de pontos assistencias e rebotes -->
-                                <td><%=  %></td>
-                                <td><%=  %></td>
-                                <td><%=  %></td>
+                                <% if (nextGame && nextGame.length > 0) { %>
+                                    <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                                      <!-- Exibir os prognósticos -->
+                                      <td><%= prognosticosTimeB[index].pontos.toFixed(2) %></td>
+                                      <td><%= prognosticosTimeB[index].assistencias.toFixed(2) %></td>
+                                      <td><%= prognosticosTimeB[index].rebotes.toFixed(2) %></td>
+                                    <% } else { %>
+                                      
+                                    <% } %>
+                                  <% } else { %>
+                                    
+                                  <% } %>
                             </tr>
                         <% }); %>
                     </table>

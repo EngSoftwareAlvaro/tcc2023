@@ -1,5 +1,6 @@
 const db = require('../config/db'); // Importe o módulo de conexão com o banco de dados
 const app = require('../config/app.js')
+const { fazerPrognostico } = require('../controllers/prognostico');
 
 // Função para mapear as posições
 function getPositionName(posicao) {
@@ -113,8 +114,8 @@ app.get('/jogador/:timeId/:jogadorId', (req, res) => {
       AVG(tpp) AS mediaTpp,
       AVG(offReb) AS mediaOffReb,
       AVG(defReb) AS mediaDefReb,
-      AVG(totReb) AS mediaTotReb,
-      AVG(assists) AS mediaAssists,
+      AVG(rebotes) AS mediaTotReb,
+      AVG(assistencias) AS mediaAssists,
       AVG(pFouls) AS mediaPFouls,
       AVG(steals) AS mediaSteals,
       AVG(turnovers) AS mediaTurnovers,
@@ -163,8 +164,8 @@ app.get('/partida/:idPartida', async (req, res) => {
   const partida = await db.query('SELECT * FROM partidas WHERE idPartida = ?', [idPartida]);
 
   if (partida.length === 0) {
-      // Partida não encontrada
-      return res.status(404).send('Partida não encontrada');
+    // Partida não encontrada
+    return res.status(404).send('Partida não encontrada');
   }
 
   const partidaInfo = partida[0];
@@ -177,24 +178,41 @@ app.get('/partida/:idPartida', async (req, res) => {
 
   const timeALineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.home]);
   const timeBLineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.visitor]);
-  
+
   const statsTA = await db.query('SELECT * FROM statstime WHERE idTime = ?', [partidaInfo.home]);
   const statsTB = await db.query('SELECT * FROM statstime WHERE idTime = ?', [partidaInfo.visitor]);
+
   if (timeADetails.length === 0 || timeBDetails.length === 0) {
-      // Um ou ambos os times não foram encontrados
-      return res.status(404).send('Um ou ambos os times não foram encontrados');
+    // Um ou ambos os times não foram encontrados
+    return res.status(404).send('Um ou ambos os times não foram encontrados');
   }
 
   const timeA = timeADetails[0];
   const timeB = timeBDetails[0];
 
-  console.log(statsTA);
-  console.log(statsTB);
-  // Renderize a página da partida e passe os dados da partida e dos times para o modelo
-  res.render('partida', { partida: partidaInfo, timeA, timeB,timeALineup, timeBLineup, statsTA, statsTB });
+  // Consulta para obter a próxima partida da equipe da casa que ainda não ocorreu
+  const nextGame = await db.query(
+    'SELECT date FROM partidas WHERE home = ? AND date >= NOW() ORDER BY date ASC LIMIT 1',
+    [timeA.idTime]
+  );
+
+  // Agora, para cada jogador em timeALineup e timeBLineup, calcule o prognóstico
+  const prognosticosTimeA = [];
+  const prognosticosTimeB = [];
+
+  for (const jogador of timeALineup) {
+    const prognostico = await fazerPrognostico(jogador);
+    prognosticosTimeA.push(prognostico);
+  }
+
+  for (const jogador of timeBLineup) {
+    const prognostico = await fazerPrognostico(jogador);
+    prognosticosTimeB.push(prognostico);
+  }
+
+  // Renderize a página da partida e passe os dados da partida, dos times, da próxima partida da equipe da casa e dos prognósticos para o modelo
+  res.render('partida', { partida: partidaInfo, timeA, timeB, nextGame, timeALineup, timeBLineup, statsTA, statsTB, prognosticosTimeA, prognosticosTimeB });
 });
-
-
 
 
 
