@@ -47,15 +47,31 @@ app.get('/time/:timeId', (req, res) => {
   // Consulta para obter estatísticas do time
   const estatisticasQuery = `SELECT * FROM statstime WHERE idTime = '${timeId}'`;
 
+  const partidasQuery = `
+  SELECT DISTINCT P.idPartida, P.*, 
+    CASE
+      WHEN P.home = '${timeId}' THEN (SELECT nome FROM time WHERE idTime = P.visitor)
+      ELSE (SELECT nome FROM time WHERE idTime = P.home)
+    END AS timeAdversario,
+    CASE
+      WHEN P.home = '${timeId}' THEN (SELECT logo FROM time WHERE idTime = P.visitor)
+      ELSE (SELECT logo FROM time WHERE idTime = P.home)
+    END AS logoAdversario
+  FROM partidas P
+  WHERE P.home = '${timeId}' OR P.visitor = '${timeId}'
+`;
+
   Promise.all([
     db.query(timeQuery),
     db.query(jogadoresQuery),
-    db.query(estatisticasQuery)
+    db.query(estatisticasQuery),
+    db.query(partidasQuery)
   ])
     .then(results => {
       const timeResults = results[0];
       const jogadoresResults = results[1];
       const estatisticasResults = results[2];
+      const partidasResults = results[3];
 
       if (timeResults.length === 0) {
         res.status(404).json({ error: 'Time não encontrado' });
@@ -63,8 +79,9 @@ app.get('/time/:timeId', (req, res) => {
         const time = timeResults[0];
         const jogadoresDoTime = jogadoresResults;
         const estatisticasDoTime = estatisticasResults.length > 0 ? estatisticasResults[0] : null;
-
-        res.render('time.ejs', { time, jogadores: jogadoresDoTime, estatisticasDoTime });
+        const partidas = partidasResults;
+  
+        res.render('time.ejs', { time, jogadores: jogadoresDoTime, estatisticasDoTime, partidas });
       }
     })
     .catch(error => {
@@ -95,10 +112,10 @@ app.get('/jogador/:timeId/:jogadorId', (req, res) => {
   
   // Consulta para retornar os dados do jogador
   const jogadorQuery = `
-    SELECT * FROM jogador WHERE idJogador = '${jogadorId}' AND idTime = '${timeId}'
+    SELECT * FROM jogador WHERE idJogador = ? AND idTime = ?
   `;
   const timeQuery = `
-    SELECT idTime, logo FROM time WHERE idTime = '${timeId}'
+    SELECT idTime, logo FROM time WHERE idTime = ?
   `;
   // Consulta para calcular a média de ocorrências dos campos e o total de jogos
   const mediaQuery = `
@@ -128,17 +145,32 @@ app.get('/jogador/:timeId/:jogadorId', (req, res) => {
     FROM statsJogador
     WHERE idJogador = ?
   `;
+  const partidasQuery = `
+  SELECT DISTINCT P.idPartida, P.*, 
+    CASE
+      WHEN P.home = ? THEN (SELECT nome FROM time WHERE idTime = P.visitor)
+      ELSE (SELECT nome FROM time WHERE idTime = P.home)
+    END AS timeAdversario,
+    CASE
+      WHEN P.home = ? THEN (SELECT logo FROM time WHERE idTime = P.visitor)
+      ELSE (SELECT logo FROM time WHERE idTime = P.home)
+    END AS logoAdversario
+  FROM partidas P
+  WHERE P.home = ? OR P.visitor = ?
+`;
   
   // Executar as duas consultas em paralelo
   Promise.all([
-    db.query(jogadorQuery),
+    db.query(jogadorQuery, [jogadorId, timeId]),
     db.query(mediaQuery, [jogadorId]),
-    db.query(timeQuery)
+    db.query(timeQuery, [timeId]),
+    db.query(partidasQuery, [timeId,timeId,timeId,timeId])
   ])
     .then(results => {
       const jogador = results[0][0]; // Resultado da primeira consulta
       const media = results[1][0];   // Resultado da segunda consulta
       const time = results[2][0];
+      const partidas = results[3];
 
       if (!jogador) {
         res.status(404).json({ error: 'Jogador não encontrado' });
@@ -147,7 +179,7 @@ app.get('/jogador/:timeId/:jogadorId', (req, res) => {
         jogador.idade = calculateAge(jogador.idade);
         // Mapeie a posição usando a função getPositionName
         jogador.posicao = getPositionName(jogador.posicao);
-        res.render('jogador.ejs', { jogador, media, time });
+        res.render('jogador.ejs', { jogador, media, time, partidas });
       }
     })
     .catch(error => {

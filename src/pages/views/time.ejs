@@ -7,7 +7,7 @@
 
     <!-- Inclua o FullCalendar CSS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
-    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     
     <style>
         body {
@@ -107,7 +107,15 @@
                             </tr>
                             <tr>
                                 <td>Conferência:</td>
-                                <td><%= time.conferencia %></td>
+                                <td>
+                                    <% if (time.conferencia === 'West') { %>
+                                        Oeste
+                                    <% } else if (time.conferencia === 'East') { %>
+                                        Leste
+                                    <% } else { %>
+                                        <%= time.conferencia %>
+                                    <% } %>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Arena:</td>
@@ -132,7 +140,7 @@
             <div class="row">
                 <div class="col s12 m6">
                     <div class="table-container">
-                        <div><h3>Estatísticas do Time</h3></div>
+                        <div><h3>Estatísticas</h3></div>
                         <table class="stats-table">
                             <% if (estatisticasDoTime) { %>
                                 <tr>
@@ -215,21 +223,69 @@
     
 
 
+<!-- Script EJS para incorporar as informações das partidas -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+    // Obtém o objeto partidas do servidor (como uma string JSON)
+    let partidas = '<%= JSON.stringify(partidas) %>';
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            dateClick: function(info) {
-                var clickedDate = info.dateStr;
-                window.location.href = '/partidas?data=' + clickedDate;
-            }
-        });
-
-        calendar.render();
+    // Decodifica as entidades HTML (por exemplo, &#34; para ")
+    partidas = partidas.replace(/&#(\d+);/g, function (match, dec) {
+        return String.fromCharCode(dec);
     });
+
+    // Converte a string JSON em um objeto JavaScript
+    partidas = JSON.parse(partidas);
+
+    document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        events: partidas, // Use o objeto partidas como a fonte de eventos para o calendário
+        eventClick: function (info) {
+            var idPartida = info.event.extendedProps.idPartida;
+            window.location.href = '/partida/' + idPartida;
+        },
+        eventContent: function (arg) {
+            // Obtém a data da partida a partir do objeto partidas
+            var partidaDate = new Date(arg.event.start);
+            var logoAdversario = null;
+
+            // Itera sobre o objeto partidas para encontrar a logo do time adversário
+            for (var partidaId in partidas) {
+                var partida = partidas[partidaId];
+                var partidaDateObj = new Date(partida.date);
+
+                // Verifica se a data da partida corresponde à data do evento no calendário
+                if (partidaDateObj.toDateString() === partidaDate.toDateString()) {
+                    logoAdversario = partida.logoAdversario;
+                    break;
+                }
+            }
+
+            // Crie um elemento HTML personalizado para o evento
+            const customEventContent = document.createElement('div');
+            customEventContent.classList.add('custom-event');
+
+            // Adicione a logo do time adversário ao elemento, se encontrada
+            if (logoAdversario) {
+                const logoElement = document.createElement('img');
+                logoElement.src = logoAdversario;
+                logoElement.style.maxWidth = '50px'; // Defina o tamanho máximo da imagem
+                logoElement.style.maxHeight = '50px';
+                customEventContent.appendChild(logoElement);
+            }
+
+            return { domNodes: [customEventContent] };
+        }
+    });
+
+    calendar.render();
+});
+
 </script>
+
 
         <!-- Inclua o FullCalendar CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.7.2/main.min.css">
