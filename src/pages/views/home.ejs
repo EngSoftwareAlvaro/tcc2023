@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Página Inicial</title>
+    <!-- Incluir Materialize CSS para manter o mesmo estilo -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Inclua o FullCalendar CSS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+    <style>
+        body {
+            background-color: #001f3f;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            z-index: 1;
+        }
+
+        /* Estilo para a coluna esquerda (tabela de partidas) */
+        .col-left {
+            flex: 1;
+            padding: 10px;
+        }
+
+        /* Estilo para a coluna direita (calendário) */
+        .col-right {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .navbar {
+    background-color: #002D62;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    /* Centraliza os itens na barra de navegação */
+}
+
+/* Seus estilos CSS aqui */
+.search-container {
+    position: relative;
+    width: 300px;
+    /* Defina a largura desejada para a barra de pesquisa */
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 2; /* Alterado o z-index para um valor maior */
+}
+
+.search-results.show {
+    display: block;
+}
+
+.search-results a {
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #ccc; /* Adicione uma borda inferior para separar os resultados */
+}
+
+.navbar button,
+.navbar a {
+    background-color: #FF4500;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 0 10px;
+    /* Adiciona margem entre os itens para espaçamento */
+    line-height: 38px;
+    /* Centraliza verticalmente o texto */
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo para padronizar o tamanho dos logos */
+.logo-image {
+        width: 75px; /* Defina a largura desejada */
+        height: 75px; /* Defina a altura desejada */
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <input type="text" id="search" placeholder="Pesquisar" oninput="search()">
+        
+        <a href="/times" class="button">Times</a>
+        <button id="compare">Comparar</button>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div class="container">
+        <div id="search-results">
+            <!-- Resultados da pesquisa dinâmica serão exibidos aqui -->
+        </div>
+        <!-- Coluna esquerda (Tabela de partidas) -->
+        <div class="col-left">
+            <h1>Partidas do dia</h1>
+            <div class="tabela-partidas">
+                <!-- Tabela de jogos do dia -->
+                <table id="gamesTable">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Time da Casa</th>
+                            <th>Time Visitante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% const today=new Date(); %>
+                            <% for (const partida of partidas) { %>
+                                <% const partidaDate=new Date(partida.date); %>
+                                    <% if (partidaDate.toDateString()===today.toDateString()) { %>
+
+                                        <tr class="partida" data-id="<%= partida.idPartida %>">
+                                            <td>
+                                                <%= partida.date.toLocaleDateString() %>
+                                            </td>
+                                            <!-- Encontre os logos dos times com base nos IDs dos times -->
+                                            <% const timeCasa=times.find(time=> time.idTime === partida.home); %>
+                                                <% const timeVisitante=times.find(time=> time.idTime ===
+                                                    partida.visitor); %>
+                                                    <td>
+                                                        <img src="<%= timeCasa ? timeCasa.logo : '' %>"
+                                                            alt="Logo Time da Casa" class="logo-image">
+                                                    </td>
+                                                    <td>
+                                                        <img src="<%= timeVisitante ? timeVisitante.logo : '' %>"
+                                                            alt="Logo Time Visitante" class="logo-image">
+                                                    </td>
+                                        </tr>
+                                        <% } %>
+                                            <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Coluna direita (Calendário) -->
+        <div class="col-right">
+            <h1>Calendário</h1>
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const partidaRows = document.querySelectorAll('.partida');
+    
+            partidaRows.forEach(row => {
+                row.addEventListener('click', function () {
+                    const idPartida = row.getAttribute('data-id');
+                    window.location.href = `/partida/${idPartida}`;
+                });
+            });
+        });
+    </script>
+
+    <script>
+        // Obtém o objeto gameday do servidor (como uma string JSON)
+        let times = '<%= JSON.stringify(times) %>';
+        // Decodifica as entidades HTML (por exemplo, &#34; para ")
+        times = times.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
+        // Converte a string JSON em um objeto JavaScript
+        times = JSON.parse(times);
+
+        // Obtém o objeto gameday do servidor (como uma string JSON)
+        let jogadores = '<%= JSON.stringify(jogadores) %>';
+        // Decodifica as entidades HTML (por exemplo, &#34; para ")
+        jogadores = jogadores.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
+        // Converte a string JSON em um objeto JavaScript
+        jogadores = JSON.parse(jogadores);
+
+        // Função para buscar resultados em tempo real
+        function search() {
+            const searchTerm = document.getElementById("search").value.toLowerCase();
+            const searchResults = document.getElementById("search-results");
+
+            // Limpa os resultados anteriores
+            searchResults.innerHTML = "";
+
+            // Pesquisar jogadores e times
+            jogadores.forEach(jogador => {
+                const nomeCompleto = `${jogador.nome} ${jogador.sobrenome}`;
+                if (nomeCompleto.toLowerCase().includes(searchTerm)) {
+                    const resultItem = document.createElement("div");
+                    resultItem.textContent = `Jogador: ${nomeCompleto}`;
+                    resultItem.addEventListener("click", () => {
+                        // Redirecionar com base no tipo (jogador)
+                        window.location.href = `/jogador/${jogador.idTime}/${jogador.idJogador}`;
+                    });
+                    searchResults.appendChild(resultItem);
+                }
+            });
+
+            times.forEach(time => {
+                if (time.nome.toLowerCase().includes(searchTerm)) {
+                    const resultItem = document.createElement("div");
+                    resultItem.textContent = `Time: ${time.nome}`;
+                    resultItem.addEventListener("click", () => {
+                        // Redirecionar com base no tipo (time)
+                        window.location.href = `/time/${time.idTime}`;
+                    });
+                    searchResults.appendChild(resultItem);
+                }
+            });
+        }
+
+        // Função para exibir os resultados da pesquisa
+        function displaySearchResults(results) {
+            const resultsList = document.getElementById("resultsList");
+            resultsList.innerHTML = "";
+
+            for (const result of results) {
+                const listItem = document.createElement("a");
+                listItem.href = `/${result.type}/${result.id}`;
+                listItem.textContent = result.name;
+                resultsList.appendChild(listItem);
+            }
+
+            // Mostrar ou ocultar a lista de resultados
+            if (results.length > 0) {
+                resultsList.classList.add("show");
+            } else {
+                resultsList.classList.remove("show");
+            }
+        }
+    </script>
+
+
+    <script>
+        // Obtém o objeto partidas do servidor (como uma string JSON)
+        let partidas = '<%= JSON.stringify(partidas) %>';
+        // Decodifica as entidades HTML (por exemplo, &#34; para ")
+        partidas = partidas.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
+        // Converte a string JSON em um objeto JavaScript
+        partidas = JSON.parse(partidas);
+
+        // Obtém o objeto gameday do servidor (como uma string JSON)
+        let gameday = '<%= JSON.stringify(gameday) %>';
+        // Decodifica as entidades HTML (por exemplo, &#34; para ")
+        gameday = gameday.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
+        // Converte a string JSON em um objeto JavaScript
+        gameday = JSON.parse(gameday);
+
+
+
+        // Função para buscar resultados em tempo real
+function search() {
+    const searchTerm = document.getElementById("search").value.trim().toLowerCase();
+    const searchResults = document.getElementById("search-results");
+
+    // Limpa os resultados anteriores
+    searchResults.innerHTML = "";
+
+    // Verifica se a barra de pesquisa está vazia
+    if (searchTerm === "") {
+        return;
+    }
+
+    // Pesquisar jogadores
+    jogadores.forEach(jogador => {
+        const nomeCompleto = `${jogador.nome} ${jogador.sobrenome}`;
+        if (nomeCompleto.toLowerCase().includes(searchTerm)) {
+            const resultItem = document.createElement("div");
+            resultItem.textContent = `Jogador: ${nomeCompleto}`;
+            resultItem.addEventListener("click", () => {
+                // Redirecionar com base no tipo (jogador)
+                window.location.href = `/jogador/${jogador.idTime}/${jogador.idJogador}`;
+            });
+            searchResults.appendChild(resultItem);
+        }
+    });
+
+    // Pesquisar times
+    times.forEach(time => {
+        if (time.nome.toLowerCase().includes(searchTerm)) {
+            const resultItem = document.createElement("div");
+            resultItem.textContent = `Time: ${time.nome}`;
+            resultItem.addEventListener("click", () => {
+                // Redirecionar com base no tipo (time)
+                window.location.href = `/time/${time.idTime}`;
+            });
+            searchResults.appendChild(resultItem);
+        }
+    });
+}
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var events = gameday.map(game => ({
+                title: 'gameday',
+                start: game.date // Iterar sobre a matriz gameday para obter a data correta
+            }));
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                events: events, // Usar a matriz "events" para marcar os dias com "gameday"
+
+                eventClick: function (info) {
+                    var date = info.event.start.toISOString().split('T')[0];
+                    window.location.href = '/' + date; // Redirecionar para a rota com a data
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js'></script>
+</body>
+
+</html>

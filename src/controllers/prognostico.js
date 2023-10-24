@@ -4,9 +4,9 @@ async function fazerPrognostico(jogador) {
   // Recupera as 5 últimas partidas do jogador
   const ultimas5Partidas = await db.query(
     `SELECT *
-    FROM statsJogador
+    FROM statsjogador
     WHERE idJogador = ?
-    ORDER BY id DESC
+    ORDER BY idstatsjogador DESC
     LIMIT 5`,
     [jogador.idJogador]
   );

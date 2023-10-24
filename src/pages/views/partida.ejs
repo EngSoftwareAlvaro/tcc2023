@@ -201,51 +201,63 @@
                         <% if (statsTA) { %>
                             <tr>
                                 <th>Pontos</th>
-                                <td><%= statsTA[0].pontos %></td>
+                                <td><%= statsTA[0].media_pontos %></td>
                             </tr>
                             <tr>
                                 <th>Assistências</th>
-                                <td><%= statsTA[0].assistencias %></td>
+                                <td><%= statsTA[0].media_assistencias %></td>
                             </tr>
                             <tr>
                                 <th>Rebotes</th>
-                                <td><%= statsTA[0].rebotes %></td>
+                                <td><%= statsTA[0].media_totReb %></td>
                             </tr>
                             <tr>
-                                <th>Tentativas 3 Pontos</th>
-                                <td><%= statsTA[0].tentativas3pt %></td>
+                                <th>Rebotes ofensivos</th>
+                                <td><%= statsTA[0].media_offReb %></td>
                             </tr>
                             <tr>
-                                <th>Conversão 3 Pontos</th>
-                                <td><%= statsTA[0].acerto3pt %>%</td>
-                            </tr>
-                            <tr>
-                                <th>Tentativas 2 Pontos</th>
-                                <td><%= statsTA[0].tentativas2pt %></td>
-                            </tr>
-                            <tr>
-                                <th>Conversão 2 Pontos</th>
-                                <td><%= statsTA[0].acertos2pt %>%</td>
+                                <th>Rebotes defensivos</th>
+                                <td><%= statsTA[0].media_defReb %></td>
                             </tr>
                             <tr>
                                 <th>Tentativas de Arremesso</th>
-                                <td><%= statsTA[0].tentativas %></td>
+                                <td><%= statsTA[0].media_fga %></td>
                             </tr>
                             <tr>
                                 <th>Conversão de Arremesso</th>
-                                <td><%= statsTA[0].acertos %>%</td>
+                                <td><%= statsTA[0].media_fgp %>%</td>
                             </tr>
                             <tr>
-                                <th>Tentativas Lance Livre</th>
-                                <td><%= statsTA[0].tentativasLL %></td>
+                                <th>Tentativas 3 Pontos</th>
+                                <td><%= statsTA[0].media_tpa %></td>
                             </tr>
                             <tr>
-                                <th>Conversão Lance Livre</th>
-                                <td><%= statsTA[0].acertosLL %>%</td>
+                                <th>Conversão 3 Pontos</th>
+                                <td><%= statsTA[0].media_tpp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Lances livres</th>
+                                <td><%= statsTA[0].media_fta %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão Lance livre</th>
+                                <td><%= statsTA[0].media_ftp %>%</td>
                             </tr>
                             <tr>
                                 <th>Média de Faltas</th>
-                                <td><%= statsTA[0].faltas %></td>
+                                <td><%= statsTA[0].media_pFouls %></td>
+                            </tr>
+                            <tr>
+                                <th>Média de Roubos</th>
+                                <td><%= statsTA[0].media_steals %></td>
+                            </tr>
+                            <tr>
+                                <th>Média de Turnovers</th>
+                                <td><%= statsTA[0].media_turnovers %></td>
+                            </tr>
+                            <tr>
+                                <th>PlusMinus da equipe</th>
+                                <td><%= statsTA[0].media_plusMinus %></td>
                             </tr>
                         <% } else { %>
                             <tr>
@@ -260,51 +272,63 @@
                         <% if (statsTB) { %>
                             <tr>
                                 <th>Pontos</th>
-                                <td><%= statsTB[0].pontos %></td>
+                                <td><%= statsTB[0].media_pontos %></td>
                             </tr>
                             <tr>
                                 <th>Assistências</th>
-                                <td><%= statsTB[0].assistencias %></td>
+                                <td><%= statsTB[0].media_assistencias %></td>
                             </tr>
                             <tr>
                                 <th>Rebotes</th>
-                                <td><%= statsTB[0].rebotes %></td>
+                                <td><%= statsTB[0].media_totReb %></td>
                             </tr>
                             <tr>
-                                <th>Tentativas 3 Pontos</th>
-                                <td><%= statsTB[0].tentativas3pt %></td>
+                                <th>Rebotes ofensivos</th>
+                                <td><%= statsTB[0].media_offReb %></td>
                             </tr>
                             <tr>
-                                <th>Conversão 3 Pontos</th>
-                                <td><%= statsTB[0].acerto3pt %>%</td>
-                            </tr>
-                            <tr>
-                                <th>Tentativas 2 Pontos</th>
-                                <td><%= statsTB[0].tentativas2pt %></td>
-                            </tr>
-                            <tr>
-                                <th>Conversão 2 Pontos</th>
-                                <td><%= statsTB[0].acertos2pt %>%</td>
+                                <th>Rebotes defensivos</th>
+                                <td><%= statsTB[0].media_defReb %></td>
                             </tr>
                             <tr>
                                 <th>Tentativas de Arremesso</th>
-                                <td><%= statsTB[0].tentativas %></td>
+                                <td><%= statsTB[0].media_fga %></td>
                             </tr>
                             <tr>
                                 <th>Conversão de Arremesso</th>
-                                <td><%= statsTB[0].acertos %>%</td>
+                                <td><%= statsTB[0].media_fgp %>%</td>
                             </tr>
                             <tr>
-                                <th>Tentativas Lance Livre</th>
-                                <td><%= statsTB[0].tentativasLL %></td>
+                                <th>Tentativas 3 Pontos</th>
+                                <td><%= statsTB[0].media_tpa %></td>
                             </tr>
                             <tr>
-                                <th>Conversão Lance Livre</th>
-                                <td><%= statsTB[0].acertosLL %>%</td>
+                                <th>Conversão 3 Pontos</th>
+                                <td><%= statsTB[0].media_tpp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Lances livres</th>
+                                <td><%= statsTB[0].media_fta %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão Lance livre</th>
+                                <td><%= statsTB[0].media_ftp %>%</td>
                             </tr>
                             <tr>
                                 <th>Média de Faltas</th>
-                                <td><%= statsTB[0].faltas %></td>
+                                <td><%= statsTB[0].media_pFouls %></td>
+                            </tr>
+                            <tr>
+                                <th>Média de Roubos</th>
+                                <td><%= statsTB[0].media_steals %></td>
+                            </tr>
+                            <tr>
+                                <th>Média de Turnovers</th>
+                                <td><%= statsTB[0].media_turnovers %></td>
+                            </tr>
+                            <tr>
+                                <th>PlusMinus da equipe</th>
+                                <td><%= statsTB[0].media_plusMinus %></td>
                             </tr>
                         <% } else { %>
                             <tr>
