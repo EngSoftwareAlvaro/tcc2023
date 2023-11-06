@@ -23,8 +23,8 @@ async function fetchAndSavePlayerStats(idPartida) {
 
       // Consulta SQL para inserir os dados na tabela de estatísticas dos jogadores
       const query = `
-        INSERT INTO statsjogador (idPartida, idJogador, idTime, pontos, assistencias, fgm, fga, fgp, ftm, fta, ftp, tpm, tpa, tpp, offReb, defReb, totReb, pFouls, steals, turnovers, blocks, plusMinus )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO statsjogador (idPartida, idJogador, idTime, pontos, assistencias, fgm, fga, fgp, ftm, fta, ftp, tpm, tpa, tpp, offReb, defReb, totReb, pFouls, steals, turnovers, blocks, plusMinus, minutos )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       `;
 
       for (const playerStat of playerStats) {
@@ -49,10 +49,11 @@ async function fetchAndSavePlayerStats(idPartida) {
         const turnovers = playerStat.turnovers;
         const blocks = playerStat.blocks;
         const plusMinus = playerStat.plusMinus;
+        const minutos = playerStat.min;
 	
 
         // Execute a consulta com os dados das estatísticas do jogador
-        await db.query(query, [idPartida, idJogador, idTime, points, assists, fgm, fga, fgp, ftm, fta, ftp, tpm, tpa, tpp, offReb, defReb, totReb, pFouls, steals, turnovers, blocks, plusMinus ]);
+        await db.query(query, [idPartida, idJogador, idTime, points, assists, fgm, fga, fgp, ftm, fta, ftp, tpm, tpa, tpp, offReb, defReb, totReb, pFouls, steals, turnovers, blocks, plusMinus, minutos ]);
 
         console.log(`Estatísticas do jogador ${idJogador} na partida ${idPartida} foram salvas com sucesso.`);
       }

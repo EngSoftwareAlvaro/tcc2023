@@ -17,7 +17,7 @@ async function fazerPrognostico(jogador) {
   // Calcula a média geral do jogador usando uma única consulta SQL
   const mediaQuery = `
   SELECT
-    AVG(rebotes) AS mediaTotReb,
+    AVG(totReb) AS mediaTotReb,
     AVG(assistencias) AS mediaAssists,
     AVG(pontos) AS mediaPontos
   FROM statsJogador
@@ -28,7 +28,7 @@ async function fazerPrognostico(jogador) {
   const mediaGeralPontos = mediaGeral[0].mediaPontos;
   const mediaGeralRebotes = mediaGeral[0].mediaTotReb;
   const mediaGeralAssistencias = mediaGeral[0].mediaAssists;
-
+    
   // Calcula o percentual de diferença entre as médias
   const percentualDiferencaPontos = (mediaUltimas5Partidas.pontos - mediaGeralPontos) / mediaGeralPontos;
   const percentualDiferencaRebotes = (mediaUltimas5Partidas.rebotes - mediaGeralRebotes) / mediaGeralRebotes;
@@ -57,7 +57,7 @@ function calcularMedia(partidas) {
   }
 
   const totalPontos = partidas.reduce((acc, partida) => acc + partida.pontos, 0);
-  const totalRebotes = partidas.reduce((acc, partida) => acc + partida.rebotes, 0);
+  const totalRebotes = partidas.reduce((acc, partida) => acc + partida.totReb, 0);
   const totalAssistencias = partidas.reduce((acc, partida) => acc + partida.assistencias, 0);
 
   const mediaPontos = totalPontos / partidas.length;

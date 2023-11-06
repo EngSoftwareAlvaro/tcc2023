@@ -145,51 +145,63 @@
                             <% if (estatisticasDoTime) { %>
                                 <tr>
                                     <th>Pontos</th>
-                                    <td><%= estatisticasDoTime.pontos %></td>
+                                    <td><%= estatisticasDoTime.media_pontos %></td>
                                 </tr>
                                 <tr>
                                     <th>Assistências</th>
-                                    <td><%= estatisticasDoTime.assistencias %></td>
+                                    <td><%= estatisticasDoTime.media_assistencias %></td>
                                 </tr>
                                 <tr>
                                     <th>Rebotes</th>
-                                    <td><%= estatisticasDoTime.rebotes %></td>
+                                    <td><%= estatisticasDoTime.media_totReb %></td>
                                 </tr>
                                 <tr>
-                                    <th>Tentativas 3 Pontos</th>
-                                    <td><%= estatisticasDoTime.tentativas3pt %></td>
+                                    <th>Rebotes ofensivos</th>
+                                    <td><%= estatisticasDoTime.media_offReb %></td>
                                 </tr>
                                 <tr>
-                                    <th>Conversão 3 Pontos</th>
-                                    <td><%= estatisticasDoTime.acerto3pt %>%</td>
-                                </tr>
-                                <tr>
-                                    <th>Tentativas 2 Pontos</th>
-                                    <td><%= estatisticasDoTime.tentativas2pt %></td>
-                                </tr>
-                                <tr>
-                                    <th>Conversão 2 Pontos</th>
-                                    <td><%= estatisticasDoTime.acertos2pt %>%</td>
+                                    <th>Rebotes defensivos</th>
+                                    <td><%= estatisticasDoTime.media_defReb %></td>
                                 </tr>
                                 <tr>
                                     <th>Tentativas de Arremesso</th>
-                                    <td><%= estatisticasDoTime.tentativas %></td>
+                                    <td><%= estatisticasDoTime.media_fga %></td>
                                 </tr>
                                 <tr>
                                     <th>Conversão de Arremesso</th>
-                                    <td><%= estatisticasDoTime.acertos %>%</td>
+                                    <td><%= estatisticasDoTime.media_fgp.toFixed(1) %>%</td>
                                 </tr>
                                 <tr>
-                                    <th>Tentativas Lance Livre</th>
-                                    <td><%= estatisticasDoTime.tentativasLL %></td>
+                                    <th>Tentativas 3 Pontos</th>
+                                    <td><%= estatisticasDoTime.media_tpa %></td>
                                 </tr>
                                 <tr>
-                                    <th>Conversão Lance Livre</th>
-                                    <td><%= estatisticasDoTime.acertosLL %>%</td>
+                                    <th>Conversão 3 Pontos</th>
+                                    <td><%= estatisticasDoTime.media_tpp.toFixed(1) %>%</td>
+                                </tr>
+                                <tr>
+                                    <th>Lances livres</th>
+                                    <td><%= estatisticasDoTime.media_fta %></td>
+                                </tr>
+                                <tr>
+                                    <th>Conversão Lance livre</th>
+                                    <td><%= estatisticasDoTime.media_ftp.toFixed(1) %>%</td>
                                 </tr>
                                 <tr>
                                     <th>Média de Faltas</th>
-                                    <td><%= estatisticasDoTime.faltas %></td>
+                                    <td><%= estatisticasDoTime.media_pFouls %></td>
+                                </tr>
+                                <tr>
+                                    <th>Média de Roubos</th>
+                                    <td><%= estatisticasDoTime.media_steals %></td>
+                                </tr>
+                                <tr>
+                                    <th>Média de Turnovers</th>
+                                    <td><%= estatisticasDoTime.media_turnovers %></td>
+                                </tr>
+                                <tr>
+                                    <th>PlusMinus da equipe</th>
+                                    <td><%= estatisticasDoTime.media_plusMinus %></td>
                                 </tr>
                             <% } else { %>
                                 <tr>

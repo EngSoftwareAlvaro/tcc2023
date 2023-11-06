@@ -73,6 +73,7 @@ const getAllGames = async () => {
 
         validGames.forEach(game => {
             db.insert('partidas', game);
+            
         });
 
         console.log('Partidas salvas no banco de dados com sucesso!');

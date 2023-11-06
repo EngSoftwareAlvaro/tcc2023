@@ -45,7 +45,28 @@ app.get('/time/:timeId', (req, res) => {
   const jogadoresQuery = `SELECT * FROM jogador WHERE idTime = '${timeId}'`;
 
   // Consulta para obter estatísticas do time
-  const estatisticasQuery = `SELECT * FROM statstime WHERE idTime = '${timeId}'`;
+  const estatisticasQuery =`SELECT
+  AVG(pontos) AS media_pontos,
+  AVG(assistencias) AS media_assistencias,
+  AVG(fgm) AS media_fgm,
+  AVG(fga) AS media_fga,
+  AVG(fgp) AS media_fgp,
+  AVG(ftm) AS media_ftm,
+  AVG(fta) AS media_fta,
+  AVG(ftp) AS media_ftp,
+  AVG(tpm) AS media_tpm,
+  AVG(tpa) AS media_tpa,
+  AVG(tpp) AS media_tpp,
+  AVG(offReb) AS media_offReb,
+  AVG(defReb) AS media_defReb,
+  AVG(totReb) AS media_totReb,
+  AVG(pFouls) AS media_pFouls,
+  AVG(steals) AS media_steals,
+  AVG(turnovers) AS media_turnovers,
+  AVG(blocks) AS media_blocks,
+  AVG(plusMinus) AS media_plusMinus
+FROM statstime
+WHERE idTime = ?;`
 
   const partidasQuery = `
   SELECT DISTINCT P.idPartida, P.*, 
@@ -64,7 +85,7 @@ app.get('/time/:timeId', (req, res) => {
   Promise.all([
     db.query(timeQuery),
     db.query(jogadoresQuery),
-    db.query(estatisticasQuery),
+    db.query(estatisticasQuery, [timeId]),
     db.query(partidasQuery)
   ])
     .then(results => {
@@ -283,6 +304,7 @@ WHERE idTime = ?;`, [partidaInfo.visitor]);
     const prognostico = await fazerPrognostico(jogador);
     prognosticosTimeB.push(prognostico);
   }
+  
   // Renderize a página da partida e passe os dados da partida, dos times, da próxima partida da equipe da casa e dos prognósticos para o modelo
   res.render('partida', { partida: partidaInfo, timeA, timeB, nextGame, timeALineup, timeBLineup, statsTA, statsTB, prognosticosTimeA, prognosticosTimeB });
 });
@@ -294,6 +316,7 @@ app.get('/', async (req, res) => {
   const partidas = await db.query('SELECT * FROM partidas');
   const gameday = await db.query('SELECT DISTINCT DATE(date) as date FROM partidas');
   
+
   res.render('home', {times, jogadores, partidas, gameday});
 });
 
@@ -307,6 +330,100 @@ app.get('/:date', async (req, res) => {
   const gameday = await db.query('SELECT DISTINCT DATE(date) as date FROM partidas');
   res.render('home', {times, jogadores, partidas, gameday}); // Renderize a página "home" com a data
 });
+
+
+// Rota para buscar estatísticas
+app.post('/buscarStats', async (req, res) => {
+  const { tipoLeft, idLeft, tipoRight, idRight } = req.body;
+
+  try {
+      const leftStats = await getStats(tipoLeft, idLeft);
+      const rightStats = await getStats(tipoRight, idRight);
+
+      if (leftStats !== null && rightStats !== null) {
+          res.json({ leftStats, rightStats });
+      } else {
+          res.status(404).json({ error: 'Dados não encontrados' });
+      }
+  } catch (error) {
+      console.error('Erro na busca de estatísticas:', error);
+      res.status(500).json({ error: 'Erro na busca de estatísticas' });
+  }
+});
+
+
+// Função para buscar estatísticas com base no tipo (player ou team) e no ID
+async function getStats(type, id) {
+  let consultaSQL = '';
+
+  if (type === 'player') {
+      consultaSQL = `
+          SELECT
+              AVG(fgm) AS mediaFgm,
+              AVG(fga) AS mediaFga,
+              AVG(fgp) AS mediaFgp,
+              AVG(ftm) AS mediaFtm,
+              AVG(fta) AS mediaFta,
+              AVG(ftp) AS mediaFtp,
+              AVG(tpm) AS mediaTpm,
+              AVG(tpa) AS mediaTpa,
+              AVG(tpp) AS mediaTpp,
+              AVG(offReb) AS mediaOffReb,
+              AVG(defReb) AS mediaDefReb,
+              AVG(totReb) AS mediaTotReb,
+              AVG(assistencias) AS mediaAssists,
+              AVG(pFouls) AS mediaPFouls,
+              AVG(steals) AS mediaSteals,
+              AVG(turnovers) AS mediaTurnovers,
+              AVG(blocks) AS mediaBlocks,
+              AVG(plusMinus) AS mediaPlusMinus,
+              AVG(pontos) AS mediaPontos,
+              AVG(CONVERT(SUBSTRING_INDEX(minutos, ':', 1), UNSIGNED)) AS mediaMinutosMin,
+              AVG(CONVERT(SUBSTRING_INDEX(SUBSTRING_INDEX(minutos, ':', -1), '.', 1), UNSIGNED)) AS mediaMinutosSeg,
+              COUNT(*) AS totalJogos
+          FROM statsJogador
+          WHERE idJogador = ?
+      `;
+  } else if (type === 'team') {
+      consultaSQL = `
+          SELECT
+              AVG(pontos) AS media_pontos,
+              AVG(assistencias) AS media_assistencias,
+              AVG(fgm) AS media_fgm,
+              AVG(fga) AS media_fga,
+              AVG(fgp) AS media_fgp,
+              AVG(ftm) AS media_ftm,
+              AVG(fta) AS media_fta,
+              AVG(ftp) AS media_ftp,
+              AVG(tpm) AS media_tpm,
+              AVG(tpa) AS media_tpa,
+              AVG(tpp) AS media_tpp,
+              AVG(offReb) AS media_offReb,
+              AVG(defReb) AS media_defReb,
+              AVG(totReb) AS media_totReb,
+              AVG(pFouls) AS media_pFouls,
+              AVG(steals) AS media_steals,
+              AVG(turnovers) AS media_turnovers,
+              AVG(blocks) AS media_blocks,
+              AVG(plusMinus) AS media_plusMinus
+          FROM statstime
+          WHERE idTime = ?
+      `;
+  }
+
+  try {
+      const results = await db.query(consultaSQL, [id]);
+      if (results.length > 0) {
+          return results[0];
+      } else {
+          return null;
+      }
+  } catch (error) {
+      throw error;
+  }
+}
+
+
 
 app.listen(3000, () => {
   console.log('Servidor iniciado na porta 3000');

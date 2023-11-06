@@ -191,7 +191,7 @@
             
             
             <!-- Informações da partida (aparece apenas uma vez) -->
-            <p class="game-infos">Data: <%= partida.date.toLocaleDateString() %> | Local: <%= timeA.arena %></p>
+            <p class="game-infos">Data: <%= partida.date.toLocaleString() %> | Local: <%= timeA.arena %></p>
             
             <!-- Seção para as estatísticas dos times (inicialmente oculta) -->
             <h2 class="stats-heading" id="toggle-stats">Estatísticas</h2>
@@ -225,7 +225,7 @@
                             </tr>
                             <tr>
                                 <th>Conversão de Arremesso</th>
-                                <td><%= statsTA[0].media_fgp %>%</td>
+                                <td><%= statsTA[0].media_fgp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Tentativas 3 Pontos</th>
@@ -233,7 +233,7 @@
                             </tr>
                             <tr>
                                 <th>Conversão 3 Pontos</th>
-                                <td><%= statsTA[0].media_tpp %>%</td>
+                                <td><%= statsTA[0].media_tpp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Lances livres</th>
@@ -241,7 +241,7 @@
                             </tr>
                             <tr>
                                 <th>Conversão Lance livre</th>
-                                <td><%= statsTA[0].media_ftp %>%</td>
+                                <td><%= statsTA[0].media_ftp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Média de Faltas</th>
@@ -296,7 +296,7 @@
                             </tr>
                             <tr>
                                 <th>Conversão de Arremesso</th>
-                                <td><%= statsTB[0].media_fgp %>%</td>
+                                <td><%= statsTB[0].media_fgp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Tentativas 3 Pontos</th>
@@ -304,7 +304,7 @@
                             </tr>
                             <tr>
                                 <th>Conversão 3 Pontos</th>
-                                <td><%= statsTB[0].media_tpp %>%</td>
+                                <td><%= statsTB[0].media_tpp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Lances livres</th>
@@ -312,7 +312,7 @@
                             </tr>
                             <tr>
                                 <th>Conversão Lance livre</th>
-                                <td><%= statsTB[0].media_ftp %>%</td>
+                                <td><%= statsTB[0].media_ftp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Média de Faltas</th>

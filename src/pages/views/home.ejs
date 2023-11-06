@@ -6,10 +6,12 @@
     <title>Página Inicial</title>
     <!-- Incluir Materialize CSS para manter o mesmo estilo -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <!-- Inclua o FullCalendar CSS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+    
     <style>
         body {
             background-color: #001f3f;
@@ -37,87 +39,89 @@
         }
 
         .navbar {
-    background-color: #002D62;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    /* Centraliza os itens na barra de navegação */
-}
+        background-color: #002D62;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+    }
 
-/* Seus estilos CSS aqui */
-.search-container {
-    position: relative;
-    width: 300px;
-    /* Defina a largura desejada para a barra de pesquisa */
-}
+    .search-container {
+        position: relative;
+        width: 300px;
+    }
 
-.search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-    z-index: 2; /* Alterado o z-index para um valor maior */
-}
+    .search-results-container {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 300px; /* Largura dos resultados da pesquisa */
+        max-width: 100%; /* Largura máxima para evitar que os resultados se estendam demais */
+        background-color: #fff;
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 2;
+    }
 
-.search-results.show {
-    display: block;
-}
 
-.search-results a {
+    #search-results div {
     display: block;
     padding: 5px;
-    text-decoration: none;
-    color: #333;
-    border-bottom: 1px solid #ccc; /* Adicione uma borda inferior para separar os resultados */
+    color: #333 !important; /* Cor do texto ajustada para preto (#333) */
+    border-bottom: 1px solid #ccc;
+    white-space: nowrap;
 }
+    .navbar button,
+    .navbar a {
+        background-color: #FF4500;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 18px;
+        margin: 0 10px;
+        line-height: 38px;
+    }
 
-.navbar button,
-.navbar a {
-    background-color: #FF4500;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 18px;
-    margin: 0 10px;
-    /* Adiciona margem entre os itens para espaçamento */
-    line-height: 38px;
-    /* Centraliza verticalmente o texto */
-}
-
-.navbar a:hover {
-    text-decoration: underline;
+    .navbar a:hover {
+        text-decoration: underline;
+    }
+.partida tr:hover{
+    color: #001f3f;
 }
 
 /* Estilo para padronizar o tamanho dos logos */
 .logo-image {
-        width: 75px; /* Defina a largura desejada */
-        height: 75px; /* Defina a altura desejada */
+        width: 50px; /* Defina a largura desejada */
+        height: 50px; /* Defina a altura desejada */
     }
+
+.vs-text {
+    margin: 0 10px; /* Ajuste o valor da margem conforme necessário */
+}
     </style>
 </head>
 
 <body>
     <!-- Navbar -->
-    <div class="navbar">
+<div class="navbar">
+    <div class="search-container">
         <input type="text" id="search" placeholder="Pesquisar" oninput="search()">
-        
-        <a href="/times" class="button">Times</a>
-        <button id="compare">Comparar</button>
+        <div class="search-results-container">
+            <div id="search-results">
+                <!-- Resultados da pesquisa dinâmica serão exibidos aqui -->
+            </div>
+        </div>
     </div>
+    <a href="/times" class="button">Times</a>
+    <button id="compare" class="btn modal-trigger" href="#compare-modal">Comparar</button>
+</div>
 
     <!-- Conteúdo principal -->
     <div class="container">
-        <div id="search-results">
-            <!-- Resultados da pesquisa dinâmica serão exibidos aqui -->
-        </div>
+        
         <!-- Coluna esquerda (Tabela de partidas) -->
         <div class="col-left">
             <h1>Partidas do dia</h1>
@@ -126,36 +130,30 @@
                 <table id="gamesTable">
                     <thead>
                         <tr>
-                            <th>Data</th>
-                            <th>Time da Casa</th>
-                            <th>Time Visitante</th>
+                            <th>Horário</th>
+                            <th>Partida</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% const today=new Date(); %>
-                            <% for (const partida of partidas) { %>
-                                <% const partidaDate=new Date(partida.date); %>
-                                    <% if (partidaDate.toDateString()===today.toDateString()) { %>
-
-                                        <tr class="partida" data-id="<%= partida.idPartida %>">
-                                            <td>
-                                                <%= partida.date.toLocaleDateString() %>
-                                            </td>
-                                            <!-- Encontre os logos dos times com base nos IDs dos times -->
-                                            <% const timeCasa=times.find(time=> time.idTime === partida.home); %>
-                                                <% const timeVisitante=times.find(time=> time.idTime ===
-                                                    partida.visitor); %>
-                                                    <td>
-                                                        <img src="<%= timeCasa ? timeCasa.logo : '' %>"
-                                                            alt="Logo Time da Casa" class="logo-image">
-                                                    </td>
-                                                    <td>
-                                                        <img src="<%= timeVisitante ? timeVisitante.logo : '' %>"
-                                                            alt="Logo Time Visitante" class="logo-image">
-                                                    </td>
-                                        </tr>
-                                        <% } %>
-                                            <% } %>
+                        <% const today = new Date(); %>
+                        <% for (const partida of partidas) { %>
+                            <% const partidaDate = new Date(partida.date); %>
+                            <% if (partidaDate.toDateString() === today.toDateString()) { %>
+                                <tr class="partida" data-id="<%= partida.idPartida %>">
+                                    <td>
+                                        <%= ('0' + partidaDate.getHours()).slice(-2) + ':' + ('0' + partidaDate.getMinutes()).slice(-2) %>
+                                    </td>
+                                    <!-- Encontre os logos dos times com base nos IDs dos times -->
+                                    <% const timeCasa = times.find(time => time.idTime === partida.home); %>
+                                    <% const timeVisitante = times.find(time => time.idTime === partida.visitor); %>
+                                    <td>
+                                        <img src="<%= timeCasa ? timeCasa.logo : '' %>" alt="Logo Time da Casa" class="logo-image">
+                                        <span class="vs-text">X</span>
+                                        <img src="<%= timeVisitante ? timeVisitante.logo : '' %>" alt="Logo Time Visitante" class="logo-image">
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } %>
                     </tbody>
                 </table>
             </div>
@@ -169,179 +167,324 @@
     </div>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const partidaRows = document.querySelectorAll('.partida');
-    
-            partidaRows.forEach(row => {
-                row.addEventListener('click', function () {
-                    const idPartida = row.getAttribute('data-id');
-                    window.location.href = `/partida/${idPartida}`;
-                });
+<!-- Modal de comparação -->
+<div id="compare-modal" class="modal">
+    <div class="modal-content">
+        <h4>Comparar Jogadores ou Times</h4>
+
+        <div class="row">
+            <div class="col s6">
+                <div class="card">
+                    <div class="card-content">
+                        <select id="leftSelectType">
+                            <option value="" selected>Selecione Jogador ou Time</option> <!-- Modificação aqui -->
+                            <option value="player">Jogador</option>
+                            <option value="team">Time</option>
+                        </select>
+                        <select id="leftSelect">
+                            <!-- Opções para seleção de jogadores ou times (preencha dinamicamente com JavaScript) -->
+                        </select>
+                    </div>
+                </div>
+                <table class="striped" id="leftStatsTable"> <!-- Adicione um ID para a tabela -->
+                    <!-- Tabela para estatísticas (preencha com JavaScript) -->
+                </table>
+            </div>
+            <div class="col s6">
+                <div class="card">
+                    <div class="card-content">
+                        <select id="rightSelectType">
+                            <option value="" selected>Selecione Jogador ou Time</option> <!-- Modificação aqui -->
+                            <option value="player">Jogador</option>
+                            <option value="team">Time</option>
+                        </select>
+                        <select id="rightSelect">
+                            <!-- Opções para seleção de jogadores ou times (preencha dinamicamente com JavaScript) -->
+                        </select>
+                    </div>
+                </div>
+                <table class="striped" id="rightStatsTable"> <!-- Adicione um ID para a tabela -->
+                    <!-- Tabela para estatísticas (preencha com JavaScript) -->
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        <a href="#!" class="waves-effect waves-green btn" onclick="displayStatisticsInModal()">Comparar</a>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const partidaRows = document.querySelectorAll('.partida');
+
+        partidaRows.forEach(row => {
+            row.addEventListener('click', function () {
+                const idPartida = row.getAttribute('data-id');
+                window.location.href = `/partida/${idPartida}`;
             });
         });
-    </script>
+    });
 
-    <script>
-        // Obtém o objeto gameday do servidor (como uma string JSON)
-        let times = '<%= JSON.stringify(times) %>';
-        // Decodifica as entidades HTML (por exemplo, &#34; para ")
-        times = times.replace(/&#(\d+);/g, function (match, dec) {
-            return String.fromCharCode(dec);
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+
+        var leftSelectType = document.getElementById('leftSelectType');
+        var leftSelect = document.getElementById('leftSelect');
+        var rightSelectType = document.getElementById('rightSelectType');
+        var rightSelect = document.getElementById('rightSelect');
+
+        var selectInstances = M.FormSelect.init(leftSelectType);
+        M.FormSelect.init(leftSelect);
+        M.FormSelect.init(rightSelectType);
+        M.FormSelect.init(rightSelect);
+
+        leftSelectType.addEventListener('change', function () {
+            fillSelectOptions(leftSelectType, leftSelect);
         });
-        // Converte a string JSON em um objeto JavaScript
-        times = JSON.parse(times);
 
-        // Obtém o objeto gameday do servidor (como uma string JSON)
-        let jogadores = '<%= JSON.stringify(jogadores) %>';
-        // Decodifica as entidades HTML (por exemplo, &#34; para ")
-        jogadores = jogadores.replace(/&#(\d+);/g, function (match, dec) {
-            return String.fromCharCode(dec);
+        rightSelectType.addEventListener('change', function () {
+            fillSelectOptions(rightSelectType, rightSelect);
         });
-        // Converte a string JSON em um objeto JavaScript
-        jogadores = JSON.parse(jogadores);
+    });
 
-        // Função para buscar resultados em tempo real
-        function search() {
-            const searchTerm = document.getElementById("search").value.toLowerCase();
-            const searchResults = document.getElementById("search-results");
+    function fillSelectOptions(selectType, select) {
+        var selectedValue = selectType.value;
+        var options;
 
-            // Limpa os resultados anteriores
-            searchResults.innerHTML = "";
-
-            // Pesquisar jogadores e times
-            jogadores.forEach(jogador => {
-                const nomeCompleto = `${jogador.nome} ${jogador.sobrenome}`;
-                if (nomeCompleto.toLowerCase().includes(searchTerm)) {
-                    const resultItem = document.createElement("div");
-                    resultItem.textContent = `Jogador: ${nomeCompleto}`;
-                    resultItem.addEventListener("click", () => {
-                        // Redirecionar com base no tipo (jogador)
-                        window.location.href = `/jogador/${jogador.idTime}/${jogador.idJogador}`;
-                    });
-                    searchResults.appendChild(resultItem);
-                }
-            });
-
-            times.forEach(time => {
-                if (time.nome.toLowerCase().includes(searchTerm)) {
-                    const resultItem = document.createElement("div");
-                    resultItem.textContent = `Time: ${time.nome}`;
-                    resultItem.addEventListener("click", () => {
-                        // Redirecionar com base no tipo (time)
-                        window.location.href = `/time/${time.idTime}`;
-                    });
-                    searchResults.appendChild(resultItem);
-                }
-            });
+        if (selectedValue === 'player') {
+            options = jogadores;
+        } else if (selectedValue === 'team') {
+            options = times;
         }
 
-        // Função para exibir os resultados da pesquisa
-        function displaySearchResults(results) {
-            const resultsList = document.getElementById("resultsList");
-            resultsList.innerHTML = "";
+        select.innerHTML = '';
 
-            for (const result of results) {
-                const listItem = document.createElement("a");
-                listItem.href = `/${result.type}/${result.id}`;
-                listItem.textContent = result.name;
-                resultsList.appendChild(listItem);
+        var emptyOption = document.createElement('option');
+        emptyOption.value = '';
+        emptyOption.textContent = 'Selecione...';
+        select.appendChild(emptyOption);
+
+        options.forEach(option => {
+            var optionElement = document.createElement('option');
+            if (selectedValue === 'player') {
+                optionElement.value = option.idJogador;
+                optionElement.textContent = selectedValue === 'player' ? `${option.nome} ${option.sobrenome}` : option.nome;
+            } else if (selectedValue === 'team') {
+                optionElement.value = option.idTime;
+                optionElement.textContent = option.nome;
             }
-
-            // Mostrar ou ocultar a lista de resultados
-            if (results.length > 0) {
-                resultsList.classList.add("show");
-            } else {
-                resultsList.classList.remove("show");
-            }
-        }
-    </script>
-
-
-    <script>
-        // Obtém o objeto partidas do servidor (como uma string JSON)
-        let partidas = '<%= JSON.stringify(partidas) %>';
-        // Decodifica as entidades HTML (por exemplo, &#34; para ")
-        partidas = partidas.replace(/&#(\d+);/g, function (match, dec) {
-            return String.fromCharCode(dec);
+            select.appendChild(optionElement);
         });
-        // Converte a string JSON em um objeto JavaScript
-        partidas = JSON.parse(partidas);
 
-        // Obtém o objeto gameday do servidor (como uma string JSON)
-        let gameday = '<%= JSON.stringify(gameday) %>';
-        // Decodifica as entidades HTML (por exemplo, &#34; para ")
-        gameday = gameday.replace(/&#(\d+);/g, function (match, dec) {
-            return String.fromCharCode(dec);
-        });
-        // Converte a string JSON em um objeto JavaScript
-        gameday = JSON.parse(gameday);
-
-
-
-        // Função para buscar resultados em tempo real
-function search() {
-    const searchTerm = document.getElementById("search").value.trim().toLowerCase();
-    const searchResults = document.getElementById("search-results");
-
-    // Limpa os resultados anteriores
-    searchResults.innerHTML = "";
-
-    // Verifica se a barra de pesquisa está vazia
-    if (searchTerm === "") {
-        return;
+        M.FormSelect.init(select);
     }
 
-    // Pesquisar jogadores
-    jogadores.forEach(jogador => {
-        const nomeCompleto = `${jogador.nome} ${jogador.sobrenome}`;
-        if (nomeCompleto.toLowerCase().includes(searchTerm)) {
-            const resultItem = document.createElement("div");
-            resultItem.textContent = `Jogador: ${nomeCompleto}`;
-            resultItem.addEventListener("click", () => {
-                // Redirecionar com base no tipo (jogador)
-                window.location.href = `/jogador/${jogador.idTime}/${jogador.idJogador}`;
-            });
-            searchResults.appendChild(resultItem);
-        }
-    });
+    async function displayStatisticsInModal() {
+    var leftSelectType = document.getElementById('leftSelectType').value;
+    var leftSelect = document.getElementById('leftSelect').value;
+    var rightSelectType = document.getElementById('rightSelectType').value;
+    var rightSelect = document.getElementById('rightSelect').value;
 
-    // Pesquisar times
-    times.forEach(time => {
-        if (time.nome.toLowerCase().includes(searchTerm)) {
-            const resultItem = document.createElement("div");
-            resultItem.textContent = `Time: ${time.nome}`;
-            resultItem.addEventListener("click", () => {
-                // Redirecionar com base no tipo (time)
-                window.location.href = `/time/${time.idTime}`;
-            });
-            searchResults.appendChild(resultItem);
-        }
-    });
+    var leftStatsTable = document.getElementById('leftStatsTable');
+    var rightStatsTable = document.getElementById('rightStatsTable');
+
+    var leftStats, rightStats;
+
+    // Verifique se ambos os lados foram selecionados
+    if (leftSelectType && leftSelect && rightSelectType && rightSelect) {
+        var data = {
+            tipoLeft: leftSelectType,
+            idLeft: leftSelect,
+            tipoRight: rightSelectType,
+            idRight: rightSelect
+        };
+
+        var response = await getStatistics(data);
+        leftStats = response.leftStats;
+        rightStats = response.rightStats;
+    }
+
+    displayStatsInTable(leftStatsTable, leftStats);
+    displayStatsInTable(rightStatsTable, rightStats);
+
+    var modalInstance = M.Modal.getInstance(document.getElementById('compare-modal'));
+    modalInstance.open();
 }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-
-            var events = gameday.map(game => ({
-                title: 'gameday',
-                start: game.date // Iterar sobre a matriz gameday para obter a data correta
-            }));
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'pt-br',
-                events: events, // Usar a matriz "events" para marcar os dias com "gameday"
-
-                eventClick: function (info) {
-                    var date = info.event.start.toISOString().split('T')[0];
-                    window.location.href = '/' + date; // Redirecionar para a rota com a data
-                }
-            });
-
-            calendar.render();
+async function getStatistics(data) {
+    try {
+        const response = await fetch('/buscarStats', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
         });
-    </script>
+
+        if (response.ok) {
+            const stats = await response.json();
+            return stats;
+        } else {
+            console.error('Erro ao buscar estatísticas.');
+            return null;
+        }
+    } catch (error) {
+        console.error('Erro na solicitação AJAX:', error);
+        return null;
+    }
+}
+
+    function displayStatsInTable(table, stats) {
+        table.innerHTML = '';
+
+        if (stats) {
+            var headerRow = table.insertRow();
+            headerRow.insertCell(0).textContent = 'Estatísticas';
+            headerRow.insertCell(1).textContent = 'Valores';
+
+            // Preencha a tabela com as estatísticas
+            for (var stat in stats) {
+                var row = table.insertRow();
+                row.insertCell(0).textContent = stat;
+                row.insertCell(1).textContent = stats[stat];
+            }
+        } else {
+            // Se não houver estatísticas disponíveis
+            var noStatsRow = table.insertRow();
+            var noStatsCell = noStatsRow.insertCell(0);
+            noStatsCell.colSpan = 2;
+            noStatsCell.textContent = 'Nenhuma estatística disponível.';
+        }
+    }
+</script>
+
+
+<script>
+    // Obtém o objeto gameday do servidor (como uma string JSON)
+    let times = '<%= JSON.stringify(times) %>';
+    // Decodifica as entidades HTML (por exemplo, &#34; para ")
+    times = times.replace(/&#(\d+);/g, function (match, dec) {
+        return String.fromCharCode(dec);
+    });
+    // Converte a string JSON em um objeto JavaScript
+    times = JSON.parse(times);
+
+    // Obtém o objeto gameday do servidor (como uma string JSON)
+    let jogadores = '<%= JSON.stringify(jogadores) %>';
+    // Decodifica as entidades HTML (por exemplo, &#34; para ")
+    jogadores = jogadores.replace(/&#(\d+);/g, function (match, dec) {
+        return String.fromCharCode(dec);
+    });
+    // Converte a string JSON em um objeto JavaScript
+    jogadores = JSON.parse(jogadores);
+
+    // Função para buscar resultados em tempo real
+    function search() {
+        const searchTerm = document.getElementById("search").value.toLowerCase();
+        const searchResults = document.getElementById("search-results");
+
+        // Limpa os resultados anteriores
+        searchResults.innerHTML = "";
+
+        // Pesquisar jogadores e times
+        jogadores.forEach(jogador => {
+            const nomeCompleto = `${jogador.nome} ${jogador.sobrenome}`;
+            if (nomeCompleto.toLowerCase().includes(searchTerm)) {
+                const resultItem = document.createElement("div");
+                resultItem.textContent = `Jogador: ${nomeCompleto}`;
+                resultItem.addEventListener("click", () => {
+                    // Redirecionar com base no tipo (jogador)
+                    window.location.href = `/jogador/${jogador.idTime}/${jogador.idJogador}`;
+                });
+                searchResults.appendChild(resultItem);
+            }
+        });
+
+        times.forEach(time => {
+            if (time.nome.toLowerCase().includes(searchTerm)) {
+                const resultItem = document.createElement("div");
+                resultItem.textContent = `Time: ${time.nome}`;
+                resultItem.addEventListener("click", () => {
+                    // Redirecionar com base no tipo (time)
+                    window.location.href = `/time/${time.idTime}`;
+                });
+                searchResults.appendChild(resultItem);
+            }
+        });
+    }
+
+    // Função para exibir os resultados da pesquisa
+    function displaySearchResults(results) {
+        const resultsList = document.getElementById("resultsList");
+        resultsList.innerHTML = "";
+
+        for (const result of results) {
+            const listItem = document.createElement("a");
+            listItem.href = `/${result.type}/${result.id}`;
+            listItem.textContent = result.name;
+            resultsList.appendChild(listItem);
+        }
+
+        // Mostrar ou ocultar a lista de resultados
+        if (results.length > 0) {
+            resultsList.classList.add("show");
+        } else {
+            resultsList.classList.remove("show");
+        }
+    }
+</script>
+
+
+<script>
+    // Obtém o objeto partidas do servidor (como uma string JSON)
+    let partidas = '<%= JSON.stringify(partidas) %>';
+    // Decodifica as entidades HTML (por exemplo, &#34; para ")
+    partidas = partidas.replace(/&#(\d+);/g, function (match, dec) {
+        return String.fromCharCode(dec);
+    });
+    // Converte a string JSON em um objeto JavaScript
+    partidas = JSON.parse(partidas);
+
+    // Obtém o objeto gameday do servidor (como uma string JSON)
+    let gameday = '<%= JSON.stringify(gameday) %>';
+    // Decodifica as entidades HTML (por exemplo, &#34; para ")
+    gameday = gameday.replace(/&#(\d+);/g, function (match, dec) {
+        return String.fromCharCode(dec);
+    });
+    // Converte a string JSON em um objeto JavaScript
+    gameday = JSON.parse(gameday);
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var events = gameday.map(game => ({
+            title: 'gameday',
+            start: game.date // Iterar sobre a matriz gameday para obter a data correta
+        }));
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pt-br',
+            events: events, // Usar a matriz "events" para marcar os dias com "gameday"
+
+            eventClick: function (info) {
+                var date = info.event.start.toISOString().split('T')[0];
+                window.location.href = '/' + date; // Redirecionar para a rota com a data
+            }
+        });
+
+        calendar.render();
+    });
+</script>
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js'></script>
