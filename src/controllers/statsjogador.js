@@ -52,7 +52,6 @@ async function fetchAndSavePlayerStats(idPartida) {
   try {
     const response = await axios.request(options);
     const playerStatsData = response.data;
-    console.log(playerStatsData.player);
     // Certifique-se de que a resposta contenha informações sobre os jogadores
     if (playerStatsData.response && playerStatsData.response.length > 0) {
       const playerStats = playerStatsData.response;
@@ -109,13 +108,13 @@ async function getPastGameIds() {
 
     // Consulta SQL para buscar os idPartida das partidas que ocorreram antes do dia de hoje
     const query = `
-      SELECT idPartida
+      SELECT DISTINCT idPartida
       FROM statstime st
       WHERE NOT EXISTS (
         SELECT 1
         FROM statsjogador s
         WHERE s.idPartida = st.idPartida
-      );
+      );    
     `;
 
     // Execute a consulta e obtenha os idPartida das partidas passadas
