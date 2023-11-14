@@ -1,309 +1,477 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Página do Time</title>
     <!-- Inclua o Materialize CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- Inclua o FullCalendar CSS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
-    
+
     <style>
         body {
-            background-color: #001f3f;
-            color: #FFFFFF;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .team-card {
             background-color: #002D62;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
+            color: black;
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 20px auto;
+            justify-content: center;
+            margin: 0;
         }
 
-        .team-card img {
-            max-width: 100px;
-            height: auto;
-        }
-
-        .table-container {
-            background-color: #002D62;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            margin: 20px auto;
-        }
-
-        .player-table, .stats-table {
-            border-collapse: collapse;
-            margin-top: 10px;
-            color: #FFFFFF;
+        .navbar {
+            background-color: #001f3f;
+            padding: 10px;
             width: 100%;
-        }
-
-        .player-table th, .player-table td,
-        .stats-table th, .stats-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
             text-align: center;
         }
 
-        .player-table th {
-            background-color: #FF4500;
-            color: #FFFFFF;
+        .button {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            /* Alinha itens verticalmente */
+            justify-content: left;
+            /* Alinha itens horizontalmente */
         }
 
-        .player-table tbody tr:nth-child(even),
-        .stats-table tbody tr:nth-child(odd) {
-            background-color: #003C8F;
-            color: #FFFFFF;
+        .button i {
+            margin-right: 5px;
+            /* Adiciona um espaço entre o ícone e o texto */
         }
 
-        .player-table tbody tr:nth-child(odd),
-        .stats-table tbody tr:nth-child(even) {
-            background-color: #001845;
-            color: #FFFFFF;
+        .container {
+            background-color: aliceblue;
+            padding: 20px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: calc(100% - 100px);
+            /* Leva em consideração as margens para calcular a largura total */
+            margin-top: 20px;
+            /* Adicionado espaço entre o navbar e o container */
         }
 
-        /* Adicione estilos para telas menores */
-        @media screen and (max-width: 992px) {
-            .team-card {
-                padding: 10px;
-                margin: 10px auto;
-            }
-            .team-card img {
-                max-width: 70px;
-            }
-            .table-container {
-                padding: 10px;
-                margin: 10px auto;
-            }
+        .card-team {
+            display: flex;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            justify-content: space-between;
         }
+
+        .team-card {
+            align-items: center;
+            /* Estilos para o card da equipe (à esquerda) */
+            flex: 1; /* Ocupa todo o espaço disponível à esquerda */
+        }
+
+        .card-calendar {
+            margin-top: 20px;
+            /* Estilos para o card do calendário (à direita) */
+            flex: 1; /* Ocupa todo o espaço disponível à direita */
+        }
+        .team-card img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Centraliza horizontalmente */
+        }
+
+
+        .card-infoTeam {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        }
+        /* Estilo para o contêiner de estatísticas dos times e elenco */
+        .toggle-section {
+            flex: 1;
+            
+        }
+
+        /* Estilo para o título "Estatísticas dos Times" */
+        .stats-heading,
+        .roster-heading {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #000000;
+        }
+
+        /* Estilo para o contêiner de estatísticas dos times e elenco */
+        .stats-section,
+        .roster-section {
+            background-color: rgb(220, 235, 250);
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+            /* Inicialmente oculta */
+            display: none;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        /* Estilo para o contêiner de estatísticas dos times e elenco */
+        .stats-secao,
+        .roster-secao {
+            background-color: rgb(220, 235, 250);
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+            /* Inicialmente oculta */
+            display: none;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* Estilo para as células da tabela dentro de .team-table */
+        .stats-table th,
+        .stats-table td,
+        .player-table th,
+        .player-table td {
+            border: 1px solid;
+            padding: 8px;
+            text-align: center;
+            color: #000000;
+        }
+    
+        .stats-table,
+        .player-table{
+            width: 100%;
+            /* Define a largura da tabela como 100% do container pai */
+            box-sizing: border-box;
+            /* Garante que a largura inclua padding e borda */
+        }
+
     </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col s12 m6">
-                    <div class="team-card">
-                        <img src="<%= time.logo %>" alt="Logo do Time">
-                        <h2><%= time.nome %></h2>
-                        <table class="team-info">
-                            <tr>
-                                <td>Sigla:</td>
-                                <td><%= time.sigla %></td>
-                            </tr>
-                            <tr>
-                                <td>Cidade:</td>
-                                <td><%= time.cidade %></td>
-                            </tr>
-                            <tr>
-                                <td>Conferência:</td>
-                                <td>
-                                    <% if (time.conferencia === 'West') { %>
-                                        Oeste
-                                    <% } else if (time.conferencia === 'East') { %>
-                                        Leste
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="/" class="button"><i class="material-icons">home</i> Página Inicial</a>
+    </div>
+    <div class="container">
+        <div class="card-team">
+            <div class="team-card">
+                <img src="<%= time.logo %>" alt="Logo do Time">
+                <h2>
+                    <%= time.nome %>
+                </h2>
+                <table class="team-info">
+                    <tr>
+                        <td>Sigla:</td>
+                        <td>
+                            <%= time.sigla %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Cidade:</td>
+                        <td>
+                            <%= time.cidade %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Conferência:</td>
+                        <td>
+                            <% if (time.conferencia==='West' ) { %>
+                                Oeste
+                                <% } else if (time.conferencia==='East' ) { %>
+                                    Leste
                                     <% } else { %>
                                         <%= time.conferencia %>
-                                    <% } %>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Arena:</td>
-                                <td><%= time.arena %></td>
-                            </tr>
-                            <tr>
-                                <td>Títulos:</td>
-                                <td><%= time.titulos %></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="col s12 m6">
-                    <div class="card">
-                        <div class="card-content">
-                            <div id="calendar"></div>
-                        </div>
-                    </div>
+                                            <% } %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Arena:</td>
+                        <td>
+                            <%= time.arena %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Títulos:</td>
+                        <td>
+                            <%= time.titulos %>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="card-calendar">
+                <div class="card-content">
+                    <div id="calendar"></div>
                 </div>
             </div>
-    
-            <div class="row">
-                <div class="col s12 m6">
-                    <div class="table-container">
-                        <div><h3>Estatísticas</h3></div>
+        </div>
+
+        <div class="card-infoTeam">
+            <div class="toggle-section" id="roster-section">
+                <h3 class="stats-heading" id="toggle-stats">Estatísticas</h3>
+                <div class="stats-secao" id="stats-secao">
+                    <div class="stats-table">
                         <table class="stats-table">
                             <% if (estatisticasDoTime) { %>
                                 <tr>
                                     <th>Pontos</th>
-                                    <td><%= estatisticasDoTime.media_pontos %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_pontos.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Assistências</th>
-                                    <td><%= estatisticasDoTime.media_assistencias %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_assistencias.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Rebotes</th>
-                                    <td><%= estatisticasDoTime.media_totReb %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_totReb.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Rebotes ofensivos</th>
-                                    <td><%= estatisticasDoTime.media_offReb %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_offReb.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Rebotes defensivos</th>
-                                    <td><%= estatisticasDoTime.media_defReb %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_defReb.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Tentativas de Arremesso</th>
-                                    <td><%= estatisticasDoTime.media_fga %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_fga.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Conversão de Arremesso</th>
-                                    <td><%= estatisticasDoTime.media_fgp.toFixed(1) %>%</td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_fgp.toFixed(1) %>%
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Tentativas 3 Pontos</th>
-                                    <td><%= estatisticasDoTime.media_tpa %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_tpa.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Conversão 3 Pontos</th>
-                                    <td><%= estatisticasDoTime.media_tpp.toFixed(1) %>%</td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_tpp.toFixed(1) %>%
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Lances livres</th>
-                                    <td><%= estatisticasDoTime.media_fta %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_fta.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Conversão Lance livre</th>
-                                    <td><%= estatisticasDoTime.media_ftp.toFixed(1) %>%</td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_ftp.toFixed(1) %>%
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Média de Faltas</th>
-                                    <td><%= estatisticasDoTime.media_pFouls %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_pFouls.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Média de Roubos</th>
-                                    <td><%= estatisticasDoTime.media_steals %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_steals.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Média de Turnovers</th>
-                                    <td><%= estatisticasDoTime.media_turnovers %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_turnovers.toFixed(1) %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>PlusMinus da equipe</th>
-                                    <td><%= estatisticasDoTime.media_plusMinus %></td>
+                                    <td>
+                                        <%= estatisticasDoTime.media_plusMinus.toFixed(1) %>
+                                    </td>
                                 </tr>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="2">Nenhuma estatística disponível</td>
-                                </tr>
-                            <% } %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="2">Nenhuma estatística disponível</td>
+                                    </tr>
+                                    <% } %>
                         </table>
                     </div>
+                        
                 </div>
-                <div class="col s12 m6">
-                    <div class="table-container">
-                        <div><h3>Elenco</h3></div>
+            </div>
+            <div class="toggle-section" id="roster-section">    
+                <h3 class="roster-heading" id="toggle-roster">Elenco</h3>
+                <div class="roster-secao" id="roster-secao">
+                    <div class="player-table">
                         <table class="player-table">
                             <tr>
                                 <th>Nome do Jogador</th>
                                 <th>Posição</th>
                             </tr>
-                            <% jogadores.forEach(jogador => { %>
+                            <% jogadores.forEach(jogador=> { %>
                                 <tr>
                                     <td>
-                                        <a href="/jogador/<%= time.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                        <a href="/jogador/<%= time.idTime %>/<%= jogador.idJogador %>">
+                                            <%= jogador.nome %>
+                                                <%= jogador.sobrenome %>
+                                        </a>
                                     </td>
-                                    <td><%= jogador.posicao %></td>
+                                    <td>
+                                            <%= jogador.posicao %>
+                                    </td>
                                 </tr>
-                            <% }); %>
+                                <% }); %>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-    
+    </div>
 
 
-<!-- Script EJS para incorporar as informações das partidas -->
-<script>
-    // Obtém o objeto partidas do servidor (como uma string JSON)
-    let partidas = '<%= JSON.stringify(partidas) %>';
 
-    // Decodifica as entidades HTML (por exemplo, &#34; para ")
-    partidas = partidas.replace(/&#(\d+);/g, function (match, dec) {
-        return String.fromCharCode(dec);
-    });
+    <!-- Script EJS para incorporar as informações das partidas -->
+    <script>
+        // Obtém o objeto partidas do servidor (como uma string JSON)
+        let partidas = '<%= JSON.stringify(partidas) %>';
 
-    // Converte a string JSON em um objeto JavaScript
-    partidas = JSON.parse(partidas);
+        // Decodifica as entidades HTML (por exemplo, &#34; para ")
+        partidas = partidas.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
 
-    document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
+        // Converte a string JSON em um objeto JavaScript
+        partidas = JSON.parse(partidas);
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        locale: 'pt-br',
-        events: partidas, // Use o objeto partidas como a fonte de eventos para o calendário
-        eventClick: function (info) {
-            var idPartida = info.event.extendedProps.idPartida;
-            window.location.href = '/partida/' + idPartida;
-        },
-        eventContent: function (arg) {
-            // Obtém a data da partida a partir do objeto partidas
-            var partidaDate = new Date(arg.event.start);
-            var logoAdversario = null;
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
 
-            // Itera sobre o objeto partidas para encontrar a logo do time adversário
-            for (var partidaId in partidas) {
-                var partida = partidas[partidaId];
-                var partidaDateObj = new Date(partida.date);
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                events: partidas, // Use o objeto partidas como a fonte de eventos para o calendário
+                eventClick: function (info) {
+                    var idPartida = info.event.extendedProps.idPartida;
+                    window.location.href = '/partida/' + idPartida;
+                },
+                eventContent: function (arg) {
+                    // Obtém a data da partida a partir do objeto partidas
+                    var partidaDate = new Date(arg.event.start);
+                    var logoAdversario = null;
 
-                // Verifica se a data da partida corresponde à data do evento no calendário
-                if (partidaDateObj.toDateString() === partidaDate.toDateString()) {
-                    logoAdversario = partida.logoAdversario;
-                    break;
+                    // Itera sobre o objeto partidas para encontrar a logo do time adversário
+                    for (var partidaId in partidas) {
+                        var partida = partidas[partidaId];
+                        var partidaDateObj = new Date(partida.date);
+
+                        // Verifica se a data da partida corresponde à data do evento no calendário
+                        if (partidaDateObj.toDateString() === partidaDate.toDateString()) {
+                            logoAdversario = partida.logoAdversario;
+                            break;
+                        }
+                    }
+
+                    // Crie um elemento HTML personalizado para o evento
+                    const customEventContent = document.createElement('div');
+                    customEventContent.classList.add('custom-event');
+
+                    // Adicione a logo do time adversário ao elemento, se encontrada
+                    if (logoAdversario) {
+                        const logoElement = document.createElement('img');
+                        logoElement.src = logoAdversario;
+                        logoElement.style.maxWidth = '50px'; // Defina o tamanho máximo da imagem
+                        logoElement.style.maxHeight = '50px';
+                        customEventContent.appendChild(logoElement);
+                    }
+
+                    return { domNodes: [customEventContent] };
                 }
-            }
+            });
 
-            // Crie um elemento HTML personalizado para o evento
-            const customEventContent = document.createElement('div');
-            customEventContent.classList.add('custom-event');
+            calendar.render();
+        });
 
-            // Adicione a logo do time adversário ao elemento, se encontrada
-            if (logoAdversario) {
-                const logoElement = document.createElement('img');
-                logoElement.src = logoAdversario;
-                logoElement.style.maxWidth = '50px'; // Defina o tamanho máximo da imagem
-                logoElement.style.maxHeight = '50px';
-                customEventContent.appendChild(logoElement);
-            }
+    </script>
 
-            return { domNodes: [customEventContent] };
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleButtons = document.querySelectorAll(".toggle-button");
+
+            toggleButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const targetId = this.getAttribute("data-target");
+                    const targetSection = document.getElementById(targetId);
+
+                    if (targetSection) {
+                        targetSection.classList.toggle("hidden");
+                    }
+                });
+            });
+        });
+
+    </script>
+
+<script>
+    const rosterSection = document.getElementById("roster-secao");
+    const toggleRosterButton = document.getElementById("toggle-roster");
+    const statsSection = document.getElementById("stats-secao");
+    const toggleStatsButton = document.getElementById("toggle-stats");
+
+    // Função para alternar a visibilidade da seção de elenco dos times
+    function toggleRosterSection() {
+        if (rosterSection.style.display === "none" || rosterSection.style.display === "") {
+            rosterSection.style.display = "flex";
+        } else {
+            rosterSection.style.display = "none";
         }
-    });
+    }
 
-    calendar.render();
-});
+    // Adicione um ouvinte de evento de clique ao título de elenco dos times
+    if (toggleRosterButton) {
+        toggleRosterButton.addEventListener("click", toggleRosterSection);
+     }
 
+    // Função para alternar a visibilidade da seção de estatísticas dos times
+    function toggleStatsSection() {
+        if (statsSection.style.display === "none" || statsSection.style.display === "") {
+            statsSection.style.display = "flex";
+        } else {
+            statsSection.style.display = "none";
+        }
+    }
+
+    // Adicione um ouvinte de evento de clique ao título de estatísticas dos times
+    toggleStatsButton.addEventListener("click", toggleStatsSection);
 </script>
 
+    <!-- Inclua o FullCalendar CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.7.2/main.min.css">
 
-        <!-- Inclua o FullCalendar CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.7.2/main.min.css">
+    <!-- Inclua o FullCalendar JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.7.2/main.min.js"></script>
 
-        <!-- Inclua o FullCalendar JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.7.2/main.min.js"></script>
-        
-    </body>
-    </html>
+</body>
+
+</html>

@@ -223,59 +223,22 @@ app.get('/partida/:idPartida', async (req, res) => {
 
   const partidaInfo = partida[0];
 
+  // Consulta para verificar se a partida está na tabela statstime
+  const partidaNaStatstime = await db.query('SELECT * FROM statstime WHERE idPartida = ?', [idPartida]);
+
+  let statsTA, statsTB;
+  let ocorreu = false;
+  let prognosticosTimeA = [];
+  let prognosticosTimeB = [];
+
   // Consulta para obter os detalhes do time A (home)
-  const timeADetails = await db.query('SELECT * FROM time WHERE idTime = ?', [partidaInfo.home]);
+  let timeADetails = await db.query('SELECT * FROM time WHERE idTime = ?', [partidaInfo.home]);
 
   // Consulta para obter os detalhes do time B (visitor)
-  const timeBDetails = await db.query('SELECT * FROM time WHERE idTime = ?', [partidaInfo.visitor]);
+  let timeBDetails = await db.query('SELECT * FROM time WHERE idTime = ?', [partidaInfo.visitor]);
 
-  const timeALineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.home]);
-  const timeBLineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.visitor]);
-
-  const statsTA = await db.query(`SELECT
-    AVG(pontos) AS media_pontos,
-    AVG(assistencias) AS media_assistencias,
-    AVG(fgm) AS media_fgm,
-    AVG(fga) AS media_fga,
-    AVG(fgp) AS media_fgp,
-    AVG(ftm) AS media_ftm,
-    AVG(fta) AS media_fta,
-    AVG(ftp) AS media_ftp,
-    AVG(tpm) AS media_tpm,
-    AVG(tpa) AS media_tpa,
-    AVG(tpp) AS media_tpp,
-    AVG(offReb) AS media_offReb,
-    AVG(defReb) AS media_defReb,
-    AVG(totReb) AS media_totReb,
-    AVG(pFouls) AS media_pFouls,
-    AVG(steals) AS media_steals,
-    AVG(turnovers) AS media_turnovers,
-    AVG(blocks) AS media_blocks,
-    AVG(plusMinus) AS media_plusMinus
-  FROM statstime
-  WHERE idTime = ?;`, [partidaInfo.home]);
-  const statsTB = await db.query(`SELECT
-  AVG(pontos) AS media_pontos,
-  AVG(assistencias) AS media_assistencias,
-  AVG(fgm) AS media_fgm,
-  AVG(fga) AS media_fga,
-  AVG(fgp) AS media_fgp,
-  AVG(ftm) AS media_ftm,
-  AVG(fta) AS media_fta,
-  AVG(ftp) AS media_ftp,
-  AVG(tpm) AS media_tpm,
-  AVG(tpa) AS media_tpa,
-  AVG(tpp) AS media_tpp,
-  AVG(offReb) AS media_offReb,
-  AVG(defReb) AS media_defReb,
-  AVG(totReb) AS media_totReb,
-  AVG(pFouls) AS media_pFouls,
-  AVG(steals) AS media_steals,
-  AVG(turnovers) AS media_turnovers,
-  AVG(blocks) AS media_blocks,
-  AVG(plusMinus) AS media_plusMinus
-FROM statstime
-WHERE idTime = ?;`, [partidaInfo.visitor]);
+  let timeALineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.home]);
+  let timeBLineup = await db.query('SELECT * FROM jogador WHERE idTime = ?', [partidaInfo.visitor]);
 
   if (timeADetails.length === 0 || timeBDetails.length === 0) {
     // Um ou ambos os times não foram encontrados
@@ -290,23 +253,77 @@ WHERE idTime = ?;`, [partidaInfo.visitor]);
     'SELECT date FROM partidas WHERE home = ? AND date >= NOW() ORDER BY date ASC LIMIT 1',
     [timeA.idTime]
   );
-
-  // Agora, para cada jogador em timeALineup e timeBLineup, calcule o prognóstico
-  const prognosticosTimeA = [];
-  const prognosticosTimeB = [];
-
-  for (const jogador of timeALineup) {
-    const prognostico = await fazerPrognostico(jogador);
-    prognosticosTimeA.push(prognostico);
-  }
-
-  for (const jogador of timeBLineup) {
-    const prognostico = await fazerPrognostico(jogador);
-    prognosticosTimeB.push(prognostico);
-  }
   
+  if (partidaNaStatstime.length > 0) {
+    // Se a partida estiver na tabela statstime, obtenha os dados correspondentes
+    statsTA = await db.query('SELECT * FROM statstime WHERE idPartida = ? AND idTime = ?', [idPartida, partidaInfo.home]);
+    statsTB = await db.query('SELECT * FROM statstime WHERE idPartida = ? AND idTime = ?', [idPartida, partidaInfo.visitor]);
+    ocorreu = true;
+    prognosticosTimeA = await db.query('SELECT * FROM statsjogador WHERE idPartida = ? AND idTime = ?', [idPartida, partidaInfo.home]);
+    prognosticosTimeB = await db.query('SELECT * FROM statsjogador WHERE idPartida = ? AND idTime = ?', [idPartida, partidaInfo.visitor]);
+
+  } else {
+    // Caso contrário, calcule as médias como antes
+    statsTA = await db.query(`SELECT
+      AVG(pontos) AS media_pontos,
+      AVG(assistencias) AS media_assistencias,
+      AVG(fgm) AS media_fgm,
+      AVG(fga) AS media_fga,
+      AVG(fgp) AS media_fgp,
+      AVG(ftm) AS media_ftm,
+      AVG(fta) AS media_fta,
+      AVG(ftp) AS media_ftp,
+      AVG(tpm) AS media_tpm,
+      AVG(tpa) AS media_tpa,
+      AVG(tpp) AS media_tpp,
+      AVG(offReb) AS media_offReb,
+      AVG(defReb) AS media_defReb,
+      AVG(totReb) AS media_totReb,
+      AVG(pFouls) AS media_pFouls,
+      AVG(steals) AS media_steals,
+      AVG(turnovers) AS media_turnovers,
+      AVG(blocks) AS media_blocks,
+      AVG(plusMinus) AS media_plusMinus
+    FROM statstime
+    WHERE idTime = ?;`, [partidaInfo.home]);
+
+    statsTB = await db.query(`SELECT
+      AVG(pontos) AS media_pontos,
+      AVG(assistencias) AS media_assistencias,
+      AVG(fgm) AS media_fgm,
+      AVG(fga) AS media_fga,
+      AVG(fgp) AS media_fgp,
+      AVG(ftm) AS media_ftm,
+      AVG(fta) AS media_fta,
+      AVG(ftp) AS media_ftp,
+      AVG(tpm) AS media_tpm,
+      AVG(tpa) AS media_tpa,
+      AVG(tpp) AS media_tpp,
+      AVG(offReb) AS media_offReb,
+      AVG(defReb) AS media_defReb,
+      AVG(totReb) AS media_totReb,
+      AVG(pFouls) AS media_pFouls,
+      AVG(steals) AS media_steals,
+      AVG(turnovers) AS media_turnovers,
+      AVG(blocks) AS media_blocks,
+      AVG(plusMinus) AS media_plusMinus
+    FROM statstime
+    WHERE idTime = ?;`, [partidaInfo.visitor]);
+
+    // Agora, para cada jogador em timeALineup e timeBLineup, calcule o prognóstico
+    for (const jogador of timeALineup) {
+      const prognostico = await fazerPrognostico(jogador);
+      prognosticosTimeA.push(prognostico);
+    }
+
+    for (const jogador of timeBLineup) {
+      const prognostico = await fazerPrognostico(jogador);
+      prognosticosTimeB.push(prognostico);
+    }
+  }
+
   // Renderize a página da partida e passe os dados da partida, dos times, da próxima partida da equipe da casa e dos prognósticos para o modelo
-  res.render('partida', { partida: partidaInfo, timeA, timeB, nextGame, timeALineup, timeBLineup, statsTA, statsTB, prognosticosTimeA, prognosticosTimeB });
+  res.render('partida', { partida: partidaInfo, timeA, timeB, nextGame, timeALineup, timeBLineup, statsTA, statsTB, prognosticosTimeA, prognosticosTimeB, ocorreu });
 });
 
 
@@ -315,20 +332,25 @@ app.get('/', async (req, res) => {
   const jogadores = await db.query('SELECT * FROM jogador');
   const partidas = await db.query('SELECT * FROM partidas');
   const gameday = await db.query('SELECT DISTINCT DATE(date) as date FROM partidas');
-  
+  const partidasDoDia = '';
 
-  res.render('home', {times, jogadores, partidas, gameday});
+  res.render('home', {times, jogadores, partidas, gameday, partidasDoDia});
 });
 
-// Defina a rota para "/:date"
-app.get('/:date', async (req, res) => {
+// Defina a rota para "/:date" com uma restrição de data
+app.get('/:date(\\d{4}-\\d{2}-\\d{2})', async (req, res) => {
   const date = req.params.date; // Obtém a data a partir dos parâmetros da rota
 
   const times = await db.query('SELECT * FROM time');
   const jogadores = await db.query('SELECT * FROM jogador');
+  
+  // Filtrar as partidas com base na data
   const partidas = await db.query('SELECT * FROM partidas');
+  const partidasDoDia = await db.query('SELECT * FROM partidas WHERE DATE(DATE_FORMAT(date, "%Y-%m-%d")) = ?', [date]);
+  
+  // Obtenha todas as datas distintas
   const gameday = await db.query('SELECT DISTINCT DATE(date) as date FROM partidas');
-  res.render('home', {times, jogadores, partidas, gameday}); // Renderize a página "home" com a data
+  res.render('home', { times, jogadores, partidas, gameday, partidasDoDia });
 });
 
 
@@ -341,6 +363,7 @@ app.post('/buscarStats', async (req, res) => {
       const rightStats = await getStats(tipoRight, idRight);
 
       if (leftStats !== null && rightStats !== null) {
+
           res.json({ leftStats, rightStats });
       } else {
           res.status(404).json({ error: 'Dados não encontrados' });

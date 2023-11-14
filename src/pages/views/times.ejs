@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>Times</title>
     <!-- Inclua o Materialize CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
     <style>
         body {
-            background-color: #001f3f;
+            background-color: #002D62;
             color: #FFFFFF;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+        }
+        .navbar {
+            background-color: #001f3f;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+    
+        .button {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            /* Alinha itens verticalmente */
+            justify-content: left;
+            /* Alinha itens horizontalmente */
+        }
+    
+        .button i {
+            margin-right: 5px;
+            /* Adiciona um espaço entre o ícone e o texto */
         }
 
         .teams-list {
@@ -45,8 +70,11 @@
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <a href="/" class="button"><i class="material-icons">home</i> Página Inicial</a>
+    </div>
     <div class="teams-list">
-        <h2>Equipes</h2>
+        <h2>Times</h2>
         <table class="teams-table">
             <tbody>
                 <% for (let i = 0; i < times.length; i++) { %>

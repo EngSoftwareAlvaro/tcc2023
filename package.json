@@ -5,7 +5,7 @@
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "fullcalendar": "^6.1.8",
+    "fullcalendar": "^6.1.9",
     "mocha": "^10.2.0",
     "moment": "^2.29.4",
     "mysql": "^2.18.1",

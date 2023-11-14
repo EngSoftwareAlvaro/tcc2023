@@ -149,9 +149,15 @@ async function getPastGamesIds() {
     // Consulta SQL para buscar os idPartida das partidas que ocorreram antes do dia de hoje
     const query = `
       SELECT idPartida
-      FROM partidas
+      FROM partidas p
       WHERE date < ?
+        AND NOT EXISTS (
+          SELECT 1
+          FROM statstime s
+          WHERE s.idPartida = p.idPartida
+        );
     `;
+
 
     // Execute a consulta e obtenha os idPartida das partidas passadas
     const rows = await db.query(query, [today]);

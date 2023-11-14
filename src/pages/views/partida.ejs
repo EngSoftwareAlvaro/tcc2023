@@ -1,67 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Adicione outros links de estilo, se necessário -->
+    <meta charset="UTF-8">
+    <title>Página da Partida</title>
+    <!-- Inclua o Materialize CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <style>
         body {
-            background-color: #001f3f;
-            color: #FFFFFF;
+            background-color: #002D62;
+            color: black;
             font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             margin: 0;
-            padding: 0;
+        }
+    
+        .navbar {
+            background-color: #001f3f;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+    
+        .button {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            /* Alinha itens verticalmente */
+            justify-content: left;
+            /* Alinha itens horizontalmente */
+        }
+    
+        .button i {
+            margin-right: 5px;
+            /* Adiciona um espaço entre o ícone e o texto */
         }
     
         .container {
-            max-width: 1400px;
-            margin: 20px auto;
+            background-color: aliceblue;
             padding: 20px;
-            background-color: #002D62;
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-    
-        .game-heading {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
+            box-sizing: border-box;
+            width: calc(100% - 100px);
+            /* Leva em consideração as margens para calcular a largura total */
+            margin-top: 20px;
+            /* Adicionado espaço entre o navbar e o container */
         }
     
         .game-card {
             display: flex;
-            /* Alterado para exibir os times lado a lado */
-            background-color: #002D62;
+            margin: 20px;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
         }
-
+    
         .team-column {
             flex: 1;
-            /* Cada coluna ocupa 50% do espaço */
             display: flex;
             flex-direction: column;
             align-items: center;
         }
     
         .team-card {
-            background-color: #003C8F;
+            background-color: rgb(220, 235, 250);
             padding: 10px;
             border-radius: 5px;
             text-align: center;
             margin: 10px;
-            min-height: 200px; /* Altura mínima definida */
-            min-width: 200px; /* Largura mínima definida */
+            height: 280px;
+            width: 390px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center; /* Centraliza o conteúdo horizontalmente */
+            align-items: center;
         }
     
         .team-card img {
             max-width: 100px;
             height: auto;
-            margin-bottom: 10px;
+    
         }
     
         .versus-heading {
@@ -70,101 +93,94 @@
             margin: 0 20px;
         }
     
-        .roster-section {
-            background-color: #002D62;
+        .game-infos {
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+    
+        /* Novo estilo para o título "Estatísticas dos Times" */
+        .stats-heading {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #000000;
+        }
+    
+        /* Estilo para o contêiner de estatísticas dos times */
+        .stats-section {
+            background-color: rgb(220, 235, 250);
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
             text-align: center;
-            display: none; /* Inicialmente oculta */
+            /* Inicialmente oculta */
+            display: none;
+            gap: 10px;
             /* Outras propriedades de estilo da sua seção */
-            justify-content: space-between; /* Distribui o espaço igualmente entre as colunas */
+            justify-content: space-between;
+    
         }
-
-        .team-table{
-            margin: 50px;
-        }
-
-        /* Estilo para as células da tabela dentro de .team-table */
-        .team-table th,
-        .team-table td {
-            border: 1px solid #ddd;
+    
+        /* Estilo para as células da tabela dentro de .stats-table */
+        .stats-table th,
+        .stats-table td {
+            border: 1px solid;
             padding: 8px;
             text-align: center;
-            color: #FFFFFF; /* Cor do texto branco */
+            color: #000000;
+        }
+    
+        .stats-table {
+            width: 100%;
+            /* Define a largura da tabela como 100% do container pai */
+            box-sizing: border-box;
+            /* Garante que a largura inclua padding e borda */
         }
 
-        /* Estilo para linhas pares da tabela dentro de .team-table */
-        .team-table tbody tr:nth-child(even) {
-            background-color: #001845;
-        }
-
-        /* Estilo para linhas ímpares da tabela dentro de .team-table */
-        .team-table tbody tr:nth-child(odd) {
-            background-color: #003C8F;
-        }
-
-        .game-infos {
-            text-align: center;
-            margin-top: 20px;
-        }
 
         /* Estilo para o título "Elenco dos Times e Prognósticos" */
         .roster-heading {
             cursor: pointer;
             text-decoration: underline;
-            color: #FFFFFF;
+            color: #000000;
+        }
+        .roster-section {
+            background-color: rgb(220, 235, 250);
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+            /* Inicialmente oculta */
+            display: none;
+            gap: 10px;
+            justify-content: space-between; /* Distribui o espaço igualmente entre as colunas */
         }
 
-        /* Novo estilo para o título "Estatísticas dos Times" */
-        .stats-heading {
-            cursor: pointer;
-            text-decoration: underline;
-            color: #FFFFFF;
+        /* Estilo para as células da tabela dentro de .team-table */
+        .team-table th,
+        .team-table td {
+            border: 1px solid;
+            padding: 8px;
+            text-align: center;
+            color: #000000;
         }
-
-        /* Estilo para o contêiner de estatísticas dos times */
-.stats-section {
-    background-color: #002D62;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    text-align: center;
-    display: none; /* Inicialmente oculta */
-    /* Outras propriedades de estilo da sua seção */
-    justify-content: space-between; /* Distribui o espaço igualmente entre as colunas */
-    /* Remova a altura mínima e o espaço superior e inferior */
-}
-
-/* Estilo para as células da tabela dentro de .stats-table */
-.stats-table th,
-.stats-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-    color: #FFFFFF; /* Cor do texto branco */
-}
-
-.stats-table {
-    margin-left: 200px; /* Remova a margem para evitar espaçamento extra */
-    margin-right: 200px;
-}
-
-/* Estilo para linhas pares da tabela dentro de .stats-table */
-.stats-table tbody tr:nth-child(even) {
-    background-color: #001845;
-}
-
-/* Estilo para linhas ímpares da tabela dentro de .stats-table */
-.stats-table tbody tr:nth-child(odd) {
-    background-color: #003C8F;
-}
+    
+        .team-table{
+            width: 100%;
+            /* Define a largura da tabela como 100% do container pai */
+            box-sizing: border-box;
+            /* Garante que a largura inclua padding e borda */
+        }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <a href="/" class="button"><i class="material-icons">home</i> Página Inicial</a>
+      </div>    
     <div class="container">
         <div class="game-details">
-            <h2 class="game-heading">Detalhes da Partida</h2>
+            <h3 class="game-heading">Detalhes da Partida</h3>
             
             <!-- Card para informações da partida -->
             <div class="game-card">
@@ -194,70 +210,131 @@
             <p class="game-infos">Data: <%= partida.date.toLocaleString() %> | Local: <%= timeA.arena %></p>
             
             <!-- Seção para as estatísticas dos times (inicialmente oculta) -->
-            <h2 class="stats-heading" id="toggle-stats">Estatísticas</h2>
+            <h3 class="stats-heading" id="toggle-stats">Estatísticas</h3>
             <div class="stats-section" id="stats-section">
                 <div class="stats-table">
                     <table class="time-table">
-                        <% if (statsTA) { %>
+                        <% if (statsTA && ocorreu != true) { %>
                             <tr>
-                                <th>Pontos</th>
-                                <td><%= statsTA[0].media_pontos %></td>
+                                <th>Média de Pontos</th>
+                                <td><%= statsTA[0].media_pontos.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Assistências</th>
-                                <td><%= statsTA[0].media_assistencias %></td>
+                                <th>Média de Assistências</th>
+                                <td><%= statsTA[0].media_assistencias.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Rebotes</th>
-                                <td><%= statsTA[0].media_totReb %></td>
+                                <th>Média de Rebotes</th>
+                                <td><%= statsTA[0].media_totReb.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Rebotes ofensivos</th>
-                                <td><%= statsTA[0].media_offReb %></td>
+                                <th>Média de Rebotes ofensivos</th>
+                                <td><%= statsTA[0].media_offReb.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Rebotes defensivos</th>
-                                <td><%= statsTA[0].media_defReb %></td>
+                                <th>Média de Rebotes defensivos</th>
+                                <td><%= statsTA[0].media_defReb.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Tentativas de Arremesso</th>
-                                <td><%= statsTA[0].media_fga %></td>
+                                <th>Média de Tentativas de Arremesso</th>
+                                <td><%= statsTA[0].media_fga.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Conversão de Arremesso</th>
+                                <th>Média de Conversão de Arremesso</th>
                                 <td><%= statsTA[0].media_fgp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
-                                <th>Tentativas 3 Pontos</th>
-                                <td><%= statsTA[0].media_tpa %></td>
+                                <th>Média de Tentativas 3 Pontos</th>
+                                <td><%= statsTA[0].media_tpa.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Conversão 3 Pontos</th>
+                                <th>Média de Conversão 3 Pontos</th>
                                 <td><%= statsTA[0].media_tpp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
-                                <th>Lances livres</th>
-                                <td><%= statsTA[0].media_fta %></td>
+                                <th>Média de Lances livres</th>
+                                <td><%= statsTA[0].media_fta.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Conversão Lance livre</th>
+                                <th>Média de Conversão Lance livre</th>
                                 <td><%= statsTA[0].media_ftp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Média de Faltas</th>
-                                <td><%= statsTA[0].media_pFouls %></td>
+                                <td><%= statsTA[0].media_pFouls.toFixed(1) %></td>
                             </tr>
                             <tr>
                                 <th>Média de Roubos</th>
-                                <td><%= statsTA[0].media_steals %></td>
+                                <td><%= statsTA[0].media_steals.toFixed(1) %></td>
                             </tr>
                             <tr>
                                 <th>Média de Turnovers</th>
-                                <td><%= statsTA[0].media_turnovers %></td>
+                                <td><%= statsTA[0].media_turnovers.toFixed(1) %></td>
+                            </tr>
+                            <tr>
+                                <th>Média de PlusMinus da equipe</th>
+                                <td><%= statsTA[0].media_plusMinus.toFixed(1) %></td>
+                            </tr>
+                        <% } else if(statsTA && ocorreu) { %>
+                            <tr>
+                                <th>Pontos</th>
+                                <td><%= statsTA[0].pontos %></td>
+                            </tr>
+                            <tr>
+                                <th>Assistências</th>
+                                <td><%= statsTA[0].assistencias %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes</th>
+                                <td><%= statsTA[0].totReb %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes ofensivos</th>
+                                <td><%= statsTA[0].offReb %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes defensivos</th>
+                                <td><%= statsTA[0].defReb %></td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas de Arremesso</th>
+                                <td><%= statsTA[0].fga %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão de Arremesso</th>
+                                <td><%= statsTA[0].fgp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas 3 Pontos</th>
+                                <td><%= statsTA[0].tpa %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão 3 Pontos</th>
+                                <td><%= statsTA[0].tpp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Lances livres</th>
+                                <td><%= statsTA[0].fta %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão Lance livre</th>
+                                <td><%= statsTA[0].ftp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Faltas</th>
+                                <td><%= statsTA[0].pFouls %></td>
+                            </tr>
+                            <tr>
+                                <th>Roubos</th>
+                                <td><%= statsTA[0].steals %></td>
+                            </tr>
+                            <tr>
+                                <th>Turnovers</th>
+                                <td><%= statsTA[0].turnovers %></td>
                             </tr>
                             <tr>
                                 <th>PlusMinus da equipe</th>
-                                <td><%= statsTA[0].media_plusMinus %></td>
+                                <td><%= statsTA[0].plusMinus %></td>
                             </tr>
                         <% } else { %>
                             <tr>
@@ -269,66 +346,127 @@
 
                 <div class="stats-table">
                     <table class="time-table">
-                        <% if (statsTB) { %>
+                        <% if (statsTB && ocorreu != true) { %>
                             <tr>
-                                <th>Pontos</th>
-                                <td><%= statsTB[0].media_pontos %></td>
+                                <th>Média de Pontos</th>
+                                <td><%= statsTB[0].media_pontos.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Assistências</th>
-                                <td><%= statsTB[0].media_assistencias %></td>
+                                <th>Média de Assistências</th>
+                                <td><%= statsTB[0].media_assistencias.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Rebotes</th>
-                                <td><%= statsTB[0].media_totReb %></td>
+                                <th>Média de Rebotes</th>
+                                <td><%= statsTB[0].media_totReb.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Rebotes ofensivos</th>
-                                <td><%= statsTB[0].media_offReb %></td>
+                                <th>Média de Rebotes ofensivos</th>
+                                <td><%= statsTB[0].media_offReb.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Rebotes defensivos</th>
-                                <td><%= statsTB[0].media_defReb %></td>
+                                <th>Média de Rebotes defensivos</th>
+                                <td><%= statsTB[0].media_defReb.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Tentativas de Arremesso</th>
-                                <td><%= statsTB[0].media_fga %></td>
+                                <th>Média de Tentativas de Arremesso</th>
+                                <td><%= statsTB[0].media_fga.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Conversão de Arremesso</th>
+                                <th>Média de Conversão de Arremesso</th>
                                 <td><%= statsTB[0].media_fgp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
-                                <th>Tentativas 3 Pontos</th>
-                                <td><%= statsTB[0].media_tpa %></td>
+                                <th>Média de Tentativas 3 Pontos</th>
+                                <td><%= statsTB[0].media_tpa.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Conversão 3 Pontos</th>
+                                <th>Média de Conversão 3 Pontos</th>
                                 <td><%= statsTB[0].media_tpp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
-                                <th>Lances livres</th>
-                                <td><%= statsTB[0].media_fta %></td>
+                                <th>Média de Lances livres</th>
+                                <td><%= statsTB[0].media_fta.toFixed(1) %></td>
                             </tr>
                             <tr>
-                                <th>Conversão Lance livre</th>
+                                <th>Média de Conversão Lance livre</th>
                                 <td><%= statsTB[0].media_ftp.toFixed(1) %>%</td>
                             </tr>
                             <tr>
                                 <th>Média de Faltas</th>
-                                <td><%= statsTB[0].media_pFouls %></td>
+                                <td><%= statsTB[0].media_pFouls.toFixed(1) %></td>
                             </tr>
                             <tr>
                                 <th>Média de Roubos</th>
-                                <td><%= statsTB[0].media_steals %></td>
+                                <td><%= statsTB[0].media_steals.toFixed(1) %></td>
                             </tr>
                             <tr>
                                 <th>Média de Turnovers</th>
-                                <td><%= statsTB[0].media_turnovers %></td>
+                                <td><%= statsTB[0].media_turnovers.toFixed(1) %></td>
+                            </tr>
+                            <tr>
+                                <th>Média de PlusMinus da equipe</th>
+                                <td><%= statsTB[0].media_plusMinus.toFixed(1) %></td>
+                            </tr>
+                        <% } else if(statsTB && ocorreu) { %>
+                            <tr>
+                                <th>Pontos</th>
+                                <td><%= statsTB[0].pontos %></td>
+                            </tr>
+                            <tr>
+                                <th>Assistências</th>
+                                <td><%= statsTB[0].assistencias %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes</th>
+                                <td><%= statsTB[0].totReb %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes ofensivos</th>
+                                <td><%= statsTB[0].offReb %></td>
+                            </tr>
+                            <tr>
+                                <th>Rebotes defensivos</th>
+                                <td><%= statsTB[0].defReb %></td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas de Arremesso</th>
+                                <td><%= statsTB[0].fga %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão de Arremesso</th>
+                                <td><%= statsTB[0].fgp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Tentativas 3 Pontos</th>
+                                <td><%= statsTB[0].tpa %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão 3 Pontos</th>
+                                <td><%= statsTB[0].tpp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Lances livres</th>
+                                <td><%= statsTB[0].fta %></td>
+                            </tr>
+                            <tr>
+                                <th>Conversão Lance livre</th>
+                                <td><%= statsTB[0].ftp %>%</td>
+                            </tr>
+                            <tr>
+                                <th>Faltas</th>
+                                <td><%= statsTB[0].pFouls %></td>
+                            </tr>
+                            <tr>
+                                <th>Roubos</th>
+                                <td><%= statsTB[0].steals %></td>
+                            </tr>
+                            <tr>
+                                <th>Turnovers</th>
+                                <td><%= statsTB[0].turnovers %></td>
                             </tr>
                             <tr>
                                 <th>PlusMinus da equipe</th>
-                                <td><%= statsTB[0].media_plusMinus %></td>
+                                <td><%= statsTB[0].plusMinus %></td>
                             </tr>
                         <% } else { %>
                             <tr>
@@ -338,10 +476,11 @@
                     </table>
                 </div>
             </div>
-
+            <% if(!ocorreu) { %>
             <!-- Seção para os elencos dos times (inicialmente oculta) -->
-            <h2 class="roster-heading" id="toggle-roster">Elenco e Prognósticos</h2>
+            <h3 class="roster-heading" id="toggle-roster">Elenco e Prognósticos</h3>
             <div class="roster-section" id="roster-section">
+                
                 <div class="team-table">
                     <table class="player-table">
                         <tr>
@@ -411,7 +550,77 @@
                         <% }); %>
                     </table>
                 </div>
+                
             </div>
+            <% } else { %>
+                <!-- Seção para os elencos dos times (inicialmente oculta) -->
+
+                <h3 class="roster-heading" id="toggle-roster">Elencos</h3>
+                <div class="roster-section" id="roster-section">
+                    
+                    <div class="team-table">
+                        <table class="player-table">
+                            <tr>
+                                <th>Jogador</th>
+                                <th>Pontos</th>
+                                <th>Assistências</th>
+                                <th>Rebotes</th>
+                            </tr>
+                            <% timeALineup.forEach((jogador, index) => { %>
+                                <tr>
+                                    <td>
+                                        <a href="/jogador/<%= timeA.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                    </td>
+                                    <!-- Inserir prognósticos de pontos assistências e rebotes -->
+                                    <% if (prognosticosTimeA[index] && prognosticosTimeA[index].pontos != null) { %>
+                                        <!-- Exibir os prognósticos -->
+                                        <td><%= prognosticosTimeA[index].pontos %></td>
+                                        <td><%= prognosticosTimeA[index].assistencias %></td>
+                                        <td><%= prognosticosTimeA[index].totReb %></td>
+                                    <% } else { %>
+                                        <!-- Não há dados disponíveis -->
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    <% } %>
+                                </tr>
+                            <% }); %>
+                        </table>
+                    </div>
+                    
+                    <div class="team-table">
+                        <table class="player-table">
+                            <tr>
+                                <th>Jogador</th>
+                                <th>Pontos</th>
+                                <th>Assistências</th>
+                                <th>Rebotes</th>
+                            </tr>
+                            <% timeBLineup.forEach((jogador, index) => { %>
+                                <tr>
+                                    <td>
+                                        <a href="/jogador/<%= timeA.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                    </td>
+                                    <!-- Inserir estatísticas de pontos assistências e rebotes -->
+                                    <% if (prognosticosTimeB[index] && prognosticosTimeB[index].pontos != null) { %>
+                                        <!-- Exibir os statsJogador -->
+                                        <td><%= prognosticosTimeB[index].pontos %></td>
+                                        <td><%= prognosticosTimeB[index].assistencias %></td>
+                                        <td><%= prognosticosTimeB[index].totReb %></td>
+                                    <% } else { %>
+                                        <!-- Não há dados disponíveis -->
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    <% } %>
+                                </tr>
+                            <% }); %>
+                        </table>
+                    </div>
+                    
+                </div>
+
+            <% } %>
         </div>
     </div>
 
@@ -431,7 +640,9 @@
         }
 
         // Adicione um ouvinte de evento de clique ao título de elenco dos times
-        toggleRosterButton.addEventListener("click", toggleRosterSection);
+        if (toggleRosterButton) {
+            toggleRosterButton.addEventListener("click", toggleRosterSection);
+         }
 
         // Função para alternar a visibilidade da seção de estatísticas dos times
         function toggleStatsSection() {

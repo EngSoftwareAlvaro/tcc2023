@@ -68,7 +68,7 @@ async function fetchAndSavePlayerInfo(idJogador, idTime) {
         // Verifique se os campos existem antes de inserir na consulta
         await db.query(query, [
           idJogador,
-          idMapping[idTime],
+          idTime,
           firstPlayer.firstname,
           firstPlayer.lastname,
           firstPlayer.height.meters,
@@ -86,7 +86,7 @@ async function fetchAndSavePlayerInfo(idJogador, idTime) {
       console.error(`A resposta da API não contém dados válidos do jogador com ID ${idJogador}.`);
     }
   } catch (error) {
-    console.error(`Erro ao buscar ou salvar informações do jogador com ID ${idJogador}:`, error);
+    console.error(`Erro ao buscar ou salvar informações do jogador com ID ${idJogador} e com idTime ${idTime} `, error);
   }
 }
 
@@ -94,7 +94,11 @@ async function fetchAndSavePlayerInfo(idJogador, idTime) {
 async function getAllPlayerIds() {
   try {
     // Consulta SQL para obter idJogador e idTime da tabela playerstats
-    const query = 'SELECT DISTINCT idJogador, idTime FROM statsjogador';
+    const query = `
+        SELECT DISTINCT sj.idJogador, sj.idTime
+        FROM statsjogador sj
+    `;
+
 
     // Execute a consulta e obtenha os idJogador
     const rows = await db.query(query);

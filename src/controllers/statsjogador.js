@@ -1,6 +1,42 @@
 const axios = require('axios');
 const db = require('../config/db');
 
+
+// Mapeamento de IDs
+const idMapping = {
+  1: 1,   // Atlanta Hawks
+  2: 2,   // Boston Celtics
+  15: 3,  // Indiana Pacers
+  4: 4,   // Brooklyn Nets
+  5: 5,   // Charlotte Hornets
+  6: 6,   // Chicago Bulls
+  7: 7,   // Cleveland Cavaliers
+  8: 8,   // Dallas Mavericks
+  9: 9,   // Denver Nuggets
+  10: 10, // Detroit Pistons
+  11: 11, // Golden State Warriors
+  16: 12, // LA Clippers
+  17: 13, // Los Angeles Lakers
+  19: 14, // Memphis Grizzlies
+  20: 15, // Miami Heat
+  21: 16, // Milwaukee Bucks
+  22: 17, // Minnesota Timberwolves
+  23: 18, // New Orleans Pelicans
+  24: 19, // New York Knicks
+  25: 20, // Oklahoma City Thunder
+  26: 21, // Orlando Magic
+  27: 22, // Philadelphia 76ers
+  28: 23, // Phoenix Suns
+  29: 24, // Portland Trail Blazers
+  30: 25, // Sacramento Kings
+  31: 26, // San Antonio Spurs
+  38: 27, // Toronto Raptors
+  40: 28, // Utah Jazz
+  41: 29, // Washington Wizards
+  14: 30, // Houston Rockets
+};
+
+
 // Função para buscar e salvar estatísticas dos jogadores para uma partida
 async function fetchAndSavePlayerStats(idPartida) {
   const options = {
@@ -29,7 +65,7 @@ async function fetchAndSavePlayerStats(idPartida) {
 
       for (const playerStat of playerStats) {
         const idJogador = playerStat.player.id;
-        const idTime = playerStat.team.id;
+        const idTime = idMapping[playerStat.team.id];
         const points = playerStat.points;
         const assists = playerStat.assists;
         const fgm = playerStat.fgm;
@@ -74,8 +110,12 @@ async function getPastGameIds() {
     // Consulta SQL para buscar os idPartida das partidas que ocorreram antes do dia de hoje
     const query = `
       SELECT idPartida
-      FROM partidas
-      WHERE date < ?
+      FROM statstime st
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM statsjogador s
+        WHERE s.idPartida = st.idPartida
+      );
     `;
 
     // Execute a consulta e obtenha os idPartida das partidas passadas

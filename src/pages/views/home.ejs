@@ -11,17 +11,18 @@
     <!-- Inclua o FullCalendar CSS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
-    
+
     <style>
         body {
             background-color: #001f3f;
-            color: #FFFFFF;
+            color: black;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
 
         .container {
+            background-color: aliceblue;
             display: flex;
             z-index: 1;
         }
@@ -39,92 +40,169 @@
         }
 
         .navbar {
-        background-color: #002D62;
-        padding: 10px;
-        display: flex;
-        justify-content: center;
-    }
+            background-color: #001f3f;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
 
-    .search-container {
-        position: relative;
-        width: 300px;
-    }
+        .brand-title {
+            color: #FF4500;
+            font-size: 32px;
+            font-weight: bold;
+        }
 
-    .search-results-container {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 300px; /* Largura dos resultados da pesquisa */
-        max-width: 100%; /* Largura máxima para evitar que os resultados se estendam demais */
-        background-color: #fff;
-        border: 1px solid #ccc;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 2;
-    }
+        .search-container {
+            position: relative;
+            width: 500px;
+        }
+
+        .search-results-container {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 500px;
+            /* Largura dos resultados da pesquisa */
+            max-width: 100%;
+            /* Largura máxima para evitar que os resultados se estendam demais */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 2;
+        }
 
 
-    #search-results div {
-    display: block;
-    padding: 5px;
-    color: #333 !important; /* Cor do texto ajustada para preto (#333) */
-    border-bottom: 1px solid #ccc;
-    white-space: nowrap;
-}
-    .navbar button,
-    .navbar a {
-        background-color: #FF4500;
-        color: #FFFFFF;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 18px;
-        margin: 0 10px;
-        line-height: 38px;
-    }
+        #search-results div {
+            display: block;
+            padding: 5px;
+            color: #333 !important;
+            /* Cor do texto ajustada para preto (#333) */
+            border-bottom: 1px solid #ccc;
+            white-space: nowrap;
+        }
 
-    .navbar a:hover {
-        text-decoration: underline;
-    }
-.partida tr:hover{
-    color: #001f3f;
-}
+        .navbar button,
+        #navbar-link {
+            background-color: #FF4500;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            align-items: center;
+            cursor: pointer;
+            min-width: 50px;
+            min-height: 50px;
+            text-decoration: none;
+            font-size: 18px;
 
-/* Estilo para padronizar o tamanho dos logos */
-.logo-image {
-        width: 50px; /* Defina a largura desejada */
-        height: 50px; /* Defina a altura desejada */
-    }
+        }
 
-.vs-text {
-    margin: 0 10px; /* Ajuste o valor da margem conforme necessário */
-}
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .partida tr:hover {
+            color: #001f3f;
+        }
+
+        /* Estilo para padronizar o tamanho dos logos */
+        .logo-image {
+            width: 50px;
+            /* Defina a largura desejada */
+            height: 50px;
+            /* Defina a altura desejada */
+        }
+
+        .vs-text {
+            margin: 0 10px;
+            /* Ajuste o valor da margem conforme necessário */
+        }
+
+        /* Estilos para o modal de comparação */
+        #compare-modal {
+            max-width: 1200px;
+            max-height: 800px;
+            width: 90%;
+        }
+
+        .modal-content {
+            padding: 24px;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        select {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-footer a.btn {
+            margin-left: 10px;
+        }
     </style>
 </head>
 
 <body>
     <!-- Navbar -->
-<div class="navbar">
-    <div class="search-container">
-        <input type="text" id="search" placeholder="Pesquisar" oninput="search()">
-        <div class="search-results-container">
-            <div id="search-results">
-                <!-- Resultados da pesquisa dinâmica serão exibidos aqui -->
+    <div class="navbar">
+        <div class="brand-title">NB3A</div>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Pesquisar" oninput="search()">
+            <div class="search-results-container">
+                <div id="search-results">
+                    <!-- Resultados da pesquisa dinâmica serão exibidos aqui -->
+                </div>
             </div>
         </div>
+        <div class="navbar-links">
+            <button id="redirectButton" class="btn">Times</button>
+            <button id="compare" class="btn modal-trigger" href="#compare-modal">Comparar</button>
+        </div>
     </div>
-    <a href="/times" class="button">Times</a>
-    <button id="compare" class="btn modal-trigger" href="#compare-modal">Comparar</button>
-</div>
+    <script>
+        document.getElementById("redirectButton").addEventListener("click", function () {
+            window.location.href = "/times";
+        });
+    </script>
 
     <!-- Conteúdo principal -->
     <div class="container">
-        
+
         <!-- Coluna esquerda (Tabela de partidas) -->
         <div class="col-left">
-            <h1>Partidas do dia</h1>
+            <h3>Partidas do dia</h3>
             <div class="tabela-partidas">
                 <!-- Tabela de jogos do dia -->
                 <table id="gamesTable">
@@ -135,264 +213,366 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% const today = new Date(); %>
-                        <% for (const partida of partidas) { %>
-                            <% const partidaDate = new Date(partida.date); %>
-                            <% if (partidaDate.toDateString() === today.toDateString()) { %>
-                                <tr class="partida" data-id="<%= partida.idPartida %>">
-                                    <td>
-                                        <%= ('0' + partidaDate.getHours()).slice(-2) + ':' + ('0' + partidaDate.getMinutes()).slice(-2) %>
-                                    </td>
-                                    <!-- Encontre os logos dos times com base nos IDs dos times -->
-                                    <% const timeCasa = times.find(time => time.idTime === partida.home); %>
-                                    <% const timeVisitante = times.find(time => time.idTime === partida.visitor); %>
-                                    <td>
-                                        <img src="<%= timeCasa ? timeCasa.logo : '' %>" alt="Logo Time da Casa" class="logo-image">
-                                        <span class="vs-text">X</span>
-                                        <img src="<%= timeVisitante ? timeVisitante.logo : '' %>" alt="Logo Time Visitante" class="logo-image">
-                                    </td>
-                                </tr>
-                            <% } %>
-                        <% } %>
+                        <% const today=new Date(); %>
+                            <% if (partidasDoDia==='' ){ %>
+                                <% for (const partida of partidas) { %>
+                                    <% const partidaDate=new Date(partida.date); %>
+                                        <% if (partidaDate.toDateString()===today.toDateString()) { %>
+                                            <tr class="partida" data-id="<%= partida.idPartida %>">
+                                                <td>
+                                                    <%= ('0' + partidaDate.getHours()).slice(-2) + ':' + ('0' +
+                                                        partidaDate.getMinutes()).slice(-2) %>
+                                                </td>
+                                                <!-- Encontre os logos dos times com base nos IDs dos times -->
+                                                <% const timeCasa=times.find(time=> time.idTime === partida.home); %>
+                                                    <% const timeVisitante=times.find(time=> time.idTime ===
+                                                        partida.visitor); %>
+                                                        <td>
+                                                            <img src="<%= timeCasa ? timeCasa.logo : '' %>"
+                                                                alt="Logo Time da Casa" class="logo-image">
+                                                            <span class="vs-text">X</span>
+                                                            <img src="<%= timeVisitante ? timeVisitante.logo : '' %>"
+                                                                alt="Logo Time Visitante" class="logo-image">
+                                                        </td>
+                                            </tr>
+                                            <% } %>
+                                                <% } %>
+                                                    <% } else { %>
+                                                        <!-- Exiba as partidas de partidasDoDia -->
+                                                        <% for (const partida of partidasDoDia) { %>
+                                                            <tr class="partida" data-id="<%= partida.idPartida %>">
+                                                                <td>
+                                                                    <%= ('0' + partida.date.getHours()).slice(-2) + ':'
+                                                                        + ('0' + partida.date.getMinutes()).slice(-2) %>
+                                                                </td>
+                                                                <!-- Encontre os logos dos times com base nos IDs dos times -->
+                                                                <% const timeCasa=times.find(time=> time.idTime ===
+                                                                    partida.home); %>
+                                                                    <% const timeVisitante=times.find(time=> time.idTime
+                                                                        ===
+                                                                        partida.visitor); %>
+                                                                        <td>
+                                                                            <img src="<%= timeCasa ? timeCasa.logo : '' %>"
+                                                                                alt="Logo Time da Casa"
+                                                                                class="logo-image">
+                                                                            <span class="vs-text">X</span>
+                                                                            <img src="<%= timeVisitante ? timeVisitante.logo : '' %>"
+                                                                                alt="Logo Time Visitante"
+                                                                                class="logo-image">
+                                                                        </td>
+                                                            </tr>
+                                                            <% } %>
+                                                                <% } %>
                     </tbody>
                 </table>
             </div>
         </div>
 
+
+
         <!-- Coluna direita (Calendário) -->
         <div class="col-right">
-            <h1>Calendário</h1>
+            <h3>Calendário</h3>
             <div id="calendar"></div>
         </div>
     </div>
 
 
-<!-- Modal de comparação -->
-<div id="compare-modal" class="modal">
-    <div class="modal-content">
-        <h4>Comparar Jogadores ou Times</h4>
+    <!-- Modal de comparação -->
+    <div id="compare-modal" class="modal">
+        <div class="modal-content">
+            <h4>Comparar Jogadores ou Times</h4>
 
-        <div class="row">
-            <div class="col s6">
-                <div class="card">
-                    <div class="card-content">
-                        <select id="leftSelectType">
-                            <option value="" selected>Selecione Jogador ou Time</option> <!-- Modificação aqui -->
-                            <option value="player">Jogador</option>
-                            <option value="team">Time</option>
-                        </select>
-                        <select id="leftSelect">
-                            <!-- Opções para seleção de jogadores ou times (preencha dinamicamente com JavaScript) -->
-                        </select>
+            <div class="row">
+                <div class="col s6">
+                    <div class="card">
+                        <div class="card-content">
+                            <select id="leftSelectType">
+                                <option value="" selected>Selecione Jogador ou Time</option> <!-- Modificação aqui -->
+                                <option value="player">Jogador</option>
+                                <option value="team">Time</option>
+                            </select>
+                            <select id="leftSelect">
+                                <!-- Opções para seleção de jogadores ou times (preencha dinamicamente com JavaScript) -->
+                            </select>
+                        </div>
                     </div>
+                    <table class="striped" id="leftStatsTable"> <!-- Adicione um ID para a tabela -->
+                        <!-- Tabela para estatísticas (preencha com JavaScript) -->
+                    </table>
                 </div>
-                <table class="striped" id="leftStatsTable"> <!-- Adicione um ID para a tabela -->
-                    <!-- Tabela para estatísticas (preencha com JavaScript) -->
-                </table>
-            </div>
-            <div class="col s6">
-                <div class="card">
-                    <div class="card-content">
-                        <select id="rightSelectType">
-                            <option value="" selected>Selecione Jogador ou Time</option> <!-- Modificação aqui -->
-                            <option value="player">Jogador</option>
-                            <option value="team">Time</option>
-                        </select>
-                        <select id="rightSelect">
-                            <!-- Opções para seleção de jogadores ou times (preencha dinamicamente com JavaScript) -->
-                        </select>
+                <div class="col s6">
+                    <div class="card">
+                        <div class="card-content">
+                            <select id="rightSelectType">
+                                <option value="" selected>Selecione Jogador ou Time</option> <!-- Modificação aqui -->
+                                <option value="player">Jogador</option>
+                                <option value="team">Time</option>
+                            </select>
+                            <select id="rightSelect">
+                                <!-- Opções para seleção de jogadores ou times (preencha dinamicamente com JavaScript) -->
+                            </select>
+                        </div>
                     </div>
+                    <table class="striped" id="rightStatsTable"> <!-- Adicione um ID para a tabela -->
+                        <!-- Tabela para estatísticas (preencha com JavaScript) -->
+                    </table>
                 </div>
-                <table class="striped" id="rightStatsTable"> <!-- Adicione um ID para a tabela -->
-                    <!-- Tabela para estatísticas (preencha com JavaScript) -->
-                </table>
             </div>
         </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+            <a href="#!" class="waves-effect waves-green btn" onclick="displayStatisticsInModal()">Comparar</a>
+        </div>
     </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
-        <a href="#!" class="waves-effect waves-green btn" onclick="displayStatisticsInModal()">Comparar</a>
-    </div>
-</div>
 
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const partidaRows = document.querySelectorAll('.partida');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const partidaRows = document.querySelectorAll('.partida');
 
-        partidaRows.forEach(row => {
-            row.addEventListener('click', function () {
-                const idPartida = row.getAttribute('data-id');
-                window.location.href = `/partida/${idPartida}`;
+            partidaRows.forEach(row => {
+                row.addEventListener('click', function () {
+                    const idPartida = row.getAttribute('data-id');
+                    window.location.href = `/partida/${idPartida}`;
+                });
             });
         });
-    });
 
-</script>
+    </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.modal');
-        var instances = M.Modal.init(elems);
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems);
 
-        var leftSelectType = document.getElementById('leftSelectType');
-        var leftSelect = document.getElementById('leftSelect');
-        var rightSelectType = document.getElementById('rightSelectType');
-        var rightSelect = document.getElementById('rightSelect');
+            var leftSelectType = document.getElementById('leftSelectType');
+            var leftSelect = document.getElementById('leftSelect');
+            var rightSelectType = document.getElementById('rightSelectType');
+            var rightSelect = document.getElementById('rightSelect');
 
-        var selectInstances = M.FormSelect.init(leftSelectType);
-        M.FormSelect.init(leftSelect);
-        M.FormSelect.init(rightSelectType);
-        M.FormSelect.init(rightSelect);
 
-        leftSelectType.addEventListener('change', function () {
-            fillSelectOptions(leftSelectType, leftSelect);
+
+
+            leftSelectType.addEventListener('change', function () {
+                fillSelectOptions(leftSelectType, leftSelect);
+            });
+
+            rightSelectType.addEventListener('change', function () {
+                fillSelectOptions(rightSelectType, rightSelect);
+            });
         });
 
-        rightSelectType.addEventListener('change', function () {
-            fillSelectOptions(rightSelectType, rightSelect);
-        });
-    });
+        function fillSelectOptions(selectType, select) {
+            var selectedValue = selectType.value;
+            var options;
 
-    function fillSelectOptions(selectType, select) {
-        var selectedValue = selectType.value;
-        var options;
-
-        if (selectedValue === 'player') {
-            options = jogadores;
-        } else if (selectedValue === 'team') {
-            options = times;
-        }
-
-        select.innerHTML = '';
-
-        var emptyOption = document.createElement('option');
-        emptyOption.value = '';
-        emptyOption.textContent = 'Selecione...';
-        select.appendChild(emptyOption);
-
-        options.forEach(option => {
-            var optionElement = document.createElement('option');
             if (selectedValue === 'player') {
-                optionElement.value = option.idJogador;
-                optionElement.textContent = selectedValue === 'player' ? `${option.nome} ${option.sobrenome}` : option.nome;
+                options = jogadores;
             } else if (selectedValue === 'team') {
-                optionElement.value = option.idTime;
-                optionElement.textContent = option.nome;
+                options = times;
             }
-            select.appendChild(optionElement);
-        });
 
-        M.FormSelect.init(select);
-    }
+            select.innerHTML = '';
 
-    async function displayStatisticsInModal() {
-    var leftSelectType = document.getElementById('leftSelectType').value;
-    var leftSelect = document.getElementById('leftSelect').value;
-    var rightSelectType = document.getElementById('rightSelectType').value;
-    var rightSelect = document.getElementById('rightSelect').value;
+            options.forEach(option => {
+                var optionElement = document.createElement('option');
+                if (selectedValue === 'player') {
+                    optionElement.value = option.idJogador;
+                    optionElement.textContent = selectedValue === 'player' ? `${option.nome} ${option.sobrenome}` : option.nome;
+                } else if (selectedValue === 'team') {
+                    optionElement.value = option.idTime;
+                    optionElement.textContent = option.nome;
+                }
+                select.appendChild(optionElement);
+            });
 
-    var leftStatsTable = document.getElementById('leftStatsTable');
-    var rightStatsTable = document.getElementById('rightStatsTable');
-
-    var leftStats, rightStats;
-
-    // Verifique se ambos os lados foram selecionados
-    if (leftSelectType && leftSelect && rightSelectType && rightSelect) {
-        var data = {
-            tipoLeft: leftSelectType,
-            idLeft: leftSelect,
-            tipoRight: rightSelectType,
-            idRight: rightSelect
-        };
-
-        var response = await getStatistics(data);
-        leftStats = response.leftStats;
-        rightStats = response.rightStats;
-    }
-
-    displayStatsInTable(leftStatsTable, leftStats);
-    displayStatsInTable(rightStatsTable, rightStats);
-
-    var modalInstance = M.Modal.getInstance(document.getElementById('compare-modal'));
-    modalInstance.open();
-}
-
-async function getStatistics(data) {
-    try {
-        const response = await fetch('/buscarStats', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-            const stats = await response.json();
-            return stats;
-        } else {
-            console.error('Erro ao buscar estatísticas.');
-            return null;
         }
-    } catch (error) {
-        console.error('Erro na solicitação AJAX:', error);
-        return null;
-    }
-}
 
-    function displayStatsInTable(table, stats) {
-        table.innerHTML = '';
+        async function displayStatisticsInModal() {
+            var leftSelectType = document.getElementById('leftSelectType').value;
+            var leftSelect = document.getElementById('leftSelect').value;
+            var rightSelectType = document.getElementById('rightSelectType').value;
+            var rightSelect = document.getElementById('rightSelect').value;
 
-        if (stats) {
-            var headerRow = table.insertRow();
-            headerRow.insertCell(0).textContent = 'Estatísticas';
-            headerRow.insertCell(1).textContent = 'Valores';
+            var leftStatsTable = document.getElementById('leftStatsTable');
+            var rightStatsTable = document.getElementById('rightStatsTable');
 
-            // Preencha a tabela com as estatísticas
-            for (var stat in stats) {
-                var row = table.insertRow();
-                row.insertCell(0).textContent = stat;
-                row.insertCell(1).textContent = stats[stat];
+            var leftStats, rightStats;
+
+            // Verifique se ambos os lados foram selecionados
+            if (leftSelectType && leftSelect && rightSelectType && rightSelect) {
+                var data = {
+                    tipoLeft: leftSelectType,
+                    idLeft: leftSelect,
+                    tipoRight: rightSelectType,
+                    idRight: rightSelect
+                };
+
+                var response = await getStatistics(data);
+                leftStats = response.leftStats;
+                rightStats = response.rightStats;
             }
-        } else {
-            // Se não houver estatísticas disponíveis
-            var noStatsRow = table.insertRow();
-            var noStatsCell = noStatsRow.insertCell(0);
-            noStatsCell.colSpan = 2;
-            noStatsCell.textContent = 'Nenhuma estatística disponível.';
+
+            // Chame a função com o tipo apropriado
+            displayStatsInTable(leftStatsTable, leftStats, leftSelectType);
+            displayStatsInTable(rightStatsTable, rightStats, rightSelectType);
+
+            var modalInstance = M.Modal.getInstance(document.getElementById('compare-modal'));
+            modalInstance.open();
         }
-    }
-</script>
+
+        async function getStatistics(data) {
+            try {
+                const response = await fetch('/buscarStats', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    const stats = await response.json();
+                    return stats;
+                } else {
+                    console.error('Erro ao buscar estatísticas.');
+                    return null;
+                }
+            } catch (error) {
+                console.error('Erro na solicitação AJAX:', error);
+                return null;
+            }
+        }
+
+        function displayStatsInTable(table, stats, type) {
+            table.innerHTML = '<tbody>'; // Abra a tag tbody
+
+            if (type === 'player') {
+                // Mapeamento das estatísticas para jogadores
+                const playerStatMapping = {
+                    mediaTotalJogos: 'Total de Jogos',
+                    mediaPontos: 'Média de Pontos',
+                    mediaAssists: 'Média de Assistências',
+                    mediaTotReb: 'Média de Rebotes',
+                    mediaFga: 'Média de Arremessos',
+                    mediaFgm: 'Média de Arremessos Certos (%)',
+                    mediaTpa: 'Média de Tentativas de 3 Pontos',
+                    mediaTpm: 'Média de Acertos de 3 Pontos (%)',
+                    mediaFga2P: 'Média de Tentativas de 2 Pontos',
+                    mediaFgm2P: 'Média de Acertos de 2 Pontos (%)',
+                    mediaFta: 'Média de Lances Livres',
+                    mediaFtm: 'Média de Acertos de Lances Livres (%)',
+                    mediaTurnovers: 'Média de Turnovers',
+                    totalJogos: 'Partidas',
+                    mediaMinutosMin: 'Média de Minutos',
+                };
+
+                for (const key in playerStatMapping) {
+                    const statName = playerStatMapping[key];
+                    const value = stats[key];
+
+                    if (value !== undefined) {
+                        const row = document.createElement('tr');
+                        const cellName = document.createElement('td');
+                        cellName.textContent = statName;
+                        cellName.style.color = 'black';
+                        const cellValue = document.createElement('td');
+                        cellValue.textContent = value.toFixed(2);
+                        cellValue.style.color = 'black';
+
+                        row.appendChild(cellName);
+                        row.appendChild(cellValue);
+                        table.appendChild(row);
+                    }
+                }
+            } else if (type === 'team') {
+                // Mapeamento das estatísticas para times
+                const teamStatMapping = {
+                    media_pontos: 'Pontos',
+                    media_assistencias: 'Assistências',
+                    media_fgm: 'Arremessos Certos',
+                    media_fga: 'Arremessos Tentados',
+                    media_fgp: 'Porcentagem de Acerto',
+                    media_ftm: 'Lances Livres Convertidos',
+                    media_fta: 'Lances Livres Tentados',
+                    media_ftp: 'Porcentagem de Lances Livres',
+                    media_tpm: 'Três Pontos Convertidos',
+                    media_tpa: 'Três Pontos Tentados',
+                    media_tpp: 'Porcentagem de Três Pontos',
+                    media_offReb: 'Rebotes de Ataque',
+                    media_defReb: 'Rebotes de Defesa',
+                    media_totReb: 'Rebotes Totais',
+                    media_pFouls: 'Faltas Pessoais',
+                    media_steals: 'Roubos de Bola',
+                    media_turnovers: 'Turnovers',
+                    media_blocks: 'Tocos',
+                    media_plusMinus: 'Mais/Menos'
+                };
+
+                for (const key in teamStatMapping) {
+                    const statName = teamStatMapping[key];
+                    const value = stats[key];
+
+                    if (value !== undefined) {
+                        const row = document.createElement('tr');
+                        const cellName = document.createElement('td');
+                        cellName.textContent = statName;
+                        cellName.style.color = 'black';
+                        const cellValue = document.createElement('td');
+                        cellValue.textContent = value.toFixed(2);
+                        cellValue.style.color = 'black';
+
+                        row.appendChild(cellName);
+                        row.appendChild(cellValue);
+                        table.appendChild(row);
+                    }
+                }
+            }
+
+            table.innerHTML += '</tbody>'; // Feche a tag tbody
+        }
 
 
-<script>
-    // Obtém o objeto gameday do servidor (como uma string JSON)
-    let times = '<%= JSON.stringify(times) %>';
-    // Decodifica as entidades HTML (por exemplo, &#34; para ")
-    times = times.replace(/&#(\d+);/g, function (match, dec) {
-        return String.fromCharCode(dec);
-    });
-    // Converte a string JSON em um objeto JavaScript
-    times = JSON.parse(times);
 
-    // Obtém o objeto gameday do servidor (como uma string JSON)
-    let jogadores = '<%= JSON.stringify(jogadores) %>';
-    // Decodifica as entidades HTML (por exemplo, &#34; para ")
-    jogadores = jogadores.replace(/&#(\d+);/g, function (match, dec) {
-        return String.fromCharCode(dec);
-    });
-    // Converte a string JSON em um objeto JavaScript
-    jogadores = JSON.parse(jogadores);
+    </script>
 
-    // Função para buscar resultados em tempo real
+
+    <script>
+        // Obtém o objeto gameday do servidor (como uma string JSON)
+        let times = '<%= JSON.stringify(times) %>';
+        // Decodifica as entidades HTML (por exemplo, &#34; para ")
+        times = times.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
+        // Converte a string JSON em um objeto JavaScript
+        times = JSON.parse(times);
+
+        // Obtém o objeto gameday do servidor (como uma string JSON)
+        let jogadores = '<%= JSON.stringify(jogadores) %>';
+        // Decodifica as entidades HTML (por exemplo, &#34; para ")
+        jogadores = jogadores.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
+        // Converte a string JSON em um objeto JavaScript
+        jogadores = JSON.parse(jogadores);
+
+        // Função para buscar resultados em tempo real
+        // Função para buscar resultados em tempo real
     function search() {
-        const searchTerm = document.getElementById("search").value.toLowerCase();
+        const searchTerm = document.getElementById("search").value.trim().toLowerCase();
+        const searchResultsContainer = document.getElementById("search-results-container");
         const searchResults = document.getElementById("search-results");
 
         // Limpa os resultados anteriores
         searchResults.innerHTML = "";
+
+        // Se a barra de pesquisa estiver vazia, ocultar o contêiner de resultados
+        if (!searchTerm) {
+            searchResultsContainer.classList.remove("show");
+            return;
+        }
 
         // Pesquisar jogadores e times
         jogadores.forEach(jogador => {
@@ -419,28 +599,35 @@ async function getStatistics(data) {
                 searchResults.appendChild(resultItem);
             }
         });
-    }
 
-    // Função para exibir os resultados da pesquisa
-    function displaySearchResults(results) {
-        const resultsList = document.getElementById("resultsList");
-        resultsList.innerHTML = "";
-
-        for (const result of results) {
-            const listItem = document.createElement("a");
-            listItem.href = `/${result.type}/${result.id}`;
-            listItem.textContent = result.name;
-            resultsList.appendChild(listItem);
-        }
-
-        // Mostrar ou ocultar a lista de resultados
-        if (results.length > 0) {
-            resultsList.classList.add("show");
+        // Exibir ou ocultar o contêiner de resultados com base na pesquisa
+        if (searchResults.children.length > 0) {
+            searchResultsContainer.classList.add("show");
         } else {
-            resultsList.classList.remove("show");
+            searchResultsContainer.classList.remove("show");
         }
     }
-</script>
+
+        // Função para exibir os resultados da pesquisa
+        function displaySearchResults(results) {
+            const resultsList = document.getElementById("resultsList");
+            resultsList.innerHTML = "";
+
+            for (const result of results) {
+                const listItem = document.createElement("a");
+                listItem.href = `/${result.type}/${result.id}`;
+                listItem.textContent = result.name;
+                resultsList.appendChild(listItem);
+            }
+
+            // Mostrar ou ocultar a lista de resultados
+            if (results.length > 0) {
+                resultsList.classList.add("show");
+            } else {
+                resultsList.classList.remove("show");
+            }
+        }
+    </script>
 
 
 <script>
@@ -462,19 +649,43 @@ async function getStatistics(data) {
     // Converte a string JSON em um objeto JavaScript
     gameday = JSON.parse(gameday);
 
-
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
 
         var events = gameday.map(game => ({
             title: 'gameday',
-            start: game.date // Iterar sobre a matriz gameday para obter a data correta
+            start: game.date,
         }));
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             locale: 'pt-br',
-            events: events, // Usar a matriz "events" para marcar os dias com "gameday"
+            events: events, // Usar a matriz "events" para marcar os dias com "gameday",
+
+            eventContent: function (info) {
+                // Criação de elementos personalizados para o evento
+                var eventContainer = document.createElement('div');
+                var eventDot = document.createElement('div');
+                var eventTime = document.createElement('div');
+                var eventTitle = document.createElement('div');
+
+                // Adição de classes aos elementos
+                eventContainer.classList.add('fc-event', 'fc-event-start', 'fc-event-end', 'fc-event-past', 'fc-daygrid-event', 'fc-daygrid-dot-event');
+                eventDot.classList.add('fc-daygrid-event-dot');
+                eventTime.classList.add('fc-event-time');
+                eventTitle.classList.add('fc-event-title');
+
+                // Definindo conteúdo para os elementos
+                eventTime.textContent = ''; // Aqui você pode adicionar o texto do horário se desejar
+                eventTitle.textContent = 'Dia de jogo';
+
+                // Adicionando elementos ao contêiner do evento
+                eventContainer.appendChild(eventDot);
+                eventContainer.appendChild(eventTime);
+                eventContainer.appendChild(eventTitle);
+
+                return { domNodes: [eventContainer] };
+            },
 
             eventClick: function (info) {
                 var date = info.event.start.toISOString().split('T')[0];
@@ -485,6 +696,7 @@ async function getStatistics(data) {
         calendar.render();
     });
 </script>
+
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js'></script>

@@ -8,104 +8,104 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
-    <!-- Inclua o Materialize CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
    <!-- Inclua o FullCalendar CSS -->
    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
    
+   <style>
+        body {
+            background-color: #002D62;
+            color: black;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+    
+        .navbar {
+            background-color: #001f3f;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+    
+        .button {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            /* Alinha itens verticalmente */
+            justify-content: left;
+            /* Alinha itens horizontalmente */
+        }
+    
+        .button i {
+            margin-right: 5px;
+            /* Adiciona um espaço entre o ícone e o texto */
+        }
 
-    <style>
-body {
-  background-color: #001f3f;
-  color: #FFFFFF;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
+        .container{
+            background-color: aliceblue;
+            padding: 20px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: calc(100% - 100px);
+            /* Leva em consideração as margens para calcular a largura total */
+            margin-top: 20px;
+            /* Adicionado espaço entre o navbar e o container */
+        }
+        .player-details {
+            text-align: center;
+            margin-bottom: 20px;
+            
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .player-name {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
 
-.player-page {
-  max-width: 1400px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #002D62;
-  border-radius: 5px;
-}
+        .player-name img {
+            width: 200px;
+            height: 200px;
+            margin-right: 10px;
+        }
+        
+        .player-info {
+            font-size: 18px;
+        }
 
-.player-details {
-  text-align: center;
-  margin-bottom: 20px;
-}
+        .card-player {
+            display: flex;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .player-stats {
+            align-items: center;
+            /* Estilos para o card da equipe (à esquerda) */
+            flex: 1; /* Ocupa todo o espaço disponível à esquerda */
+        }
 
-.player-name {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.player-name img {
-  width: 200px;
-  height: 200px;
-  margin-right: 10px;
-}
-
-.player-info {
-  font-size: 18px;
-}
-
-.calendario {
-  float: right;
-  width: 50%;
-  padding: 20px;
-}
-
-.player-stats {
-  float: left;
-  width: 50%;
-  padding: 20px;
-}
-
-.stats-heading {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.stats-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.stats-table th,
-.stats-table td {
-  padding: 10px;
-  text-align: center;
-  border-bottom: 1px solid #FFFFFF;
-}
-
-.stats-table th {
-  background-color: #FF4500;
-}
-
-.stats-table tbody tr:nth-child(even) {
-  background-color: #001845;
-}
-
-.stats-table tbody tr:nth-child(odd) {
-  background-color: #003C8F;
-}
-
-.stats-table tbody td {
-  color: #FFFFFF;
-}
-
-    </style>
+        .card-calendar {
+            /* Estilos para o card do calendário (à direita) */
+            flex: 1; /* Ocupa todo o espaço disponível à direita */
+        }
+   </style>
 </head>
 <body>
-    <div class="player-page">
+    <div class="navbar">
+        <a href="/" class="button"><i class="material-icons">home</i> Página Inicial</a>
+      </div> 
+    <div class="container">
         <div class="player-details">
             <h1 class="player-name">
                 <% if (jogador.foto) { %>
@@ -118,77 +118,82 @@ body {
                     <img class="team-logo" src="<%= time.logo %>" alt="Logo do Time" style="max-width: 50px; height: auto;">
                 </a>
             </h1>
-            <p class="player-info">Altura: <%= jogador.altura %>m | Número: <%= jogador.camisa %> | Posição: <%= jogador.posicao %> | Idade: <%= jogador.idade %></p>
+            <p class="player-info">
+                Altura: <%= jogador.altura != null ? jogador.altura + 'm' : 'Não informado' %> |
+                Número: <%= jogador.camisa != null ? jogador.camisa : 'Não informado' %> |
+                Posição: <%= jogador.posicao != null ? jogador.posicao : 'Não informado' %> |
+                Idade: <%= jogador.dataNascimento != null ? jogador.dataNascimento : 'Não informado' %>
+              </p>
+              
         </div>
-        <div class="player-stats">
-            <h1>Estatísticas</h1>
-            <table class="stats-table">
-                <tbody>
-                    <tr>
-                        <td>Total de Jogos</td>
-                        <td><%= media.totalJogos %></td>
-                    </tr>
-                    <tr>
-                        <td>Pontos</td>
-                        <td><%= media.mediaPontos.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Assistências</td>
-                        <td><%= media.mediaAssists.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Rebotes</td>
-                        <td><%= media.mediaTotReb.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Arremessos</td>
-                        <td><%= media.mediaFga.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Arremessos Certos</td>
-                        <td><%= media.mediaFgm.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Tentativas de 3 Pontos</td>
-                        <td><%= media.mediaTpa.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Acertos de 3 Pontos</td>
-                        <td><%= media.mediaTpm.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Tentativas de 2 Pontos</td>
-                        <td><%= (media.mediaFga - media.mediaTpa).toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Acertos de 2 Pontos</td>
-                        <td><%= (media.mediaFgm - media.mediaTpm).toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Lances Livres</td>
-                        <td><%= media.mediaFta.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Acertos de Lances Livres</td>
-                        <td><%= media.mediaFtm.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td>Turnovers</td>
-                        <td><%= media.mediaTurnovers.toFixed(2) %></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="calendario">
-            <h1>Calendário</h1>
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content">
-                        <div id="calendar"></div>
-                    </div>
+        <div class="card-player">
+            <div class="player-stats">
+                <h3>Estatísticas</h3>
+                <table class="stats-table">
+                    <tbody>
+                        <tr>
+                            <td>Total de Jogos</td>
+                            <td><%= media.totalJogos %></td>
+                        </tr>
+                        <tr>
+                            <td>Pontos</td>
+                            <td><%= media.mediaPontos.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Assistências</td>
+                            <td><%= media.mediaAssists.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Rebotes</td>
+                            <td><%= media.mediaTotReb.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Arremessos</td>
+                            <td><%= media.mediaFga.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Arremessos Certos</td>
+                            <td><%= media.mediaFgm.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Tentativas de 3 Pontos</td>
+                            <td><%= media.mediaTpa.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Acertos de 3 Pontos</td>
+                            <td><%= media.mediaTpm.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Tentativas de 2 Pontos</td>
+                            <td><%= (media.mediaFga - media.mediaTpa).toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Acertos de 2 Pontos</td>
+                            <td><%= (media.mediaFgm - media.mediaTpm).toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Lances Livres</td>
+                            <td><%= media.mediaFta.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Acertos de Lances Livres</td>
+                            <td><%= media.mediaFtm.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td>Turnovers</td>
+                            <td><%= media.mediaTurnovers.toFixed(2) %></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-calendar">
+                <h3>Calendário</h3>
+                <div class="card-content">
+                    <div id="calendar"></div>
                 </div>
             </div>
         </div>
+        
     </div>
 
     <!-- Script EJS para incorporar as informações das partidas -->
