@@ -48,32 +48,6 @@ const db = {
       .catch(error => console.error('Erro ao inserir os dados:', error));
   },
 
-  fetchAndInsertData: async (table, url) => {
-    try {
-      const response = await axios.get(url);
-
-      const data = response.data.response.map(item => {
-        return {
-          idJogador: item.id,
-          idTime: item.team, // Preencha com o ID do time correspondente se disponível
-          nome: item.firstname,
-          sobrenome: item.lastname,
-          idade: item.birth.date,
-          altura: item.height.meters,
-          posicao: item.leagues.standard.pos,
-          camisa: item.leagues.standard.jersey,
-        };
-      });
-
-      data.forEach(item => {
-        db.insert(table, item);
-      });
-
-      console.log(`Dados da API salvos na tabela ${table} com sucesso!`);
-    } catch (error) {
-      console.error(`Erro ao buscar os dados da API para a tabela ${table}:`, error);
-    }
-  },
 };
 
 db.connect();
