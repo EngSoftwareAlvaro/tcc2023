@@ -208,7 +208,8 @@
             
             <!-- Informações da partida (aparece apenas uma vez) -->
             <p class="game-infos">Data: <%= partida.date.toLocaleString() %> | Local: <%= timeA.arena %></p>
-            
+            <% const hoje = new Date(); %>
+            <% const formatoHoje = hoje.toLocaleDateString(); %>
             <!-- Seção para as estatísticas dos times (inicialmente oculta) -->
             <h3 class="stats-heading" id="toggle-stats">Estatísticas</h3>
             <div class="stats-section" id="stats-section">
@@ -485,7 +486,7 @@
                     <table class="player-table">
                         <tr>
                             <th>Jogador</th>
-                            <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                            <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString() || partida.date.toLocaleDateString() === formatoHoje) { %>
                                 <th>Pontos esperados</th>
                             <th>Assistências esperadas</th>
                             <th>Rebotes esperados</th>
@@ -499,7 +500,7 @@
                                 </td>
                                 <!-- Inserir prognosticos de pontos assistencias e rebotes -->
                                 <% if (nextGame && nextGame.length > 0) { %>
-                                    <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                                    <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString() || partida.date.toLocaleDateString() === formatoHoje) { %>
                                       <!-- Exibir os prognósticos -->
                                       <td><%= prognosticosTimeA[index].pontos.toFixed(2) %></td>
                                       <td><%= prognosticosTimeA[index].assistencias.toFixed(2) %></td>
@@ -521,7 +522,7 @@
                     <table class="player-table">
                         <tr>
                             <th>Jogador</th>
-                            <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                            <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString() || partida.date.toLocaleDateString() === formatoHoje) { %>
                                 <th>Pontos esperados</th>
                                 <th>Assistências esperadas</th>
                                 <th>Rebotes esperados</th>
@@ -535,7 +536,7 @@
                                 </td>
                                 <!-- Inserir prognosticos de pontos assistencias e rebotes -->
                                 <% if (nextGame && nextGame.length > 0) { %>
-                                    <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString()) { %>
+                                    <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString() || partida.date.toLocaleDateString() === formatoHoje) { %>
                                       <!-- Exibir os prognósticos -->
                                       <td><%= prognosticosTimeB[index].pontos.toFixed(2) %></td>
                                       <td><%= prognosticosTimeB[index].assistencias.toFixed(2) %></td>

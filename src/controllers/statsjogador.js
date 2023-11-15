@@ -154,3 +154,5 @@ fetchAndSavePlayerStatsForPastGames()
   .catch(error => {
     console.error('Erro ao buscar e salvar estatísticas de jogadores:', error);
   });
+
+  module.exports = {fetchAndSavePlayerStatsForPastGames}

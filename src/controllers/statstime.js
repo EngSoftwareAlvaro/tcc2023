@@ -172,8 +172,10 @@ async function getPastGamesIds() {
 }
 
 // Função para buscar e salvar estatísticas de todas as partidas passadas
-async function fetchAndSaveStatsForMultipleGames(ids) {
+async function fetchAndSaveStatsForMultipleGames() {
   try {
+    const ids = await getPastGamesIds();
+
     for (const idPartida of ids) {
       await fetchAndSaveStatsForBothTeams(idPartida);
     }
@@ -184,17 +186,15 @@ async function fetchAndSaveStatsForMultipleGames(ids) {
 }
 
 // Use a função getPastGamesIds para obter os idPartida das partidas passadas
-getPastGamesIds()
-  .then(ids => {
+
     // Use a função fetchAndSaveStatsForMultipleGames para buscar e salvar estatísticas para esses idPartida
-    fetchAndSaveStatsForMultipleGames(ids)
-      .then(() => {
-        console.log('Estatísticas de todas as partidas passadas foram salvas com sucesso.');
-      })
-      .catch(error => {
-        console.error('Erro ao buscar e salvar estatísticas:', error);
-      });
+fetchAndSaveStatsForMultipleGames()
+  .then(() => {
+    console.log('Estatísticas de todas as partidas passadas foram salvas com sucesso.');
   })
   .catch(error => {
-    console.error('Erro ao buscar idPartida das partidas passadas:', error);
+    console.error('Erro ao buscar e salvar estatísticas:', error);
   });
+
+
+  module.exports = {fetchAndSaveStatsForMultipleGames}
