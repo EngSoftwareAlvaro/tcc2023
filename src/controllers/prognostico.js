@@ -6,8 +6,8 @@ async function fazerPrognostico(jogador) {
     `SELECT *
     FROM statsjogador
     WHERE idJogador = ?
-    ORDER BY idstatsjogador DESC
-    LIMIT 5`,
+    ORDER BY idTime, idJogador, idPartida DESC
+    LIMIT 5;`,
     [jogador.idJogador]
   );
 

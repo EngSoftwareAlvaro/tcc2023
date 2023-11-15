@@ -566,17 +566,18 @@
                                 <th>Assistências</th>
                                 <th>Rebotes</th>
                             </tr>
-                            <% timeALineup.forEach((jogador, index) => { %>
+                            <% timeALineup.forEach((jogador) => { %>
                                 <tr>
                                     <td>
                                         <a href="/jogador/<%= timeA.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
                                     </td>
-                                    <!-- Inserir prognósticos de pontos assistências e rebotes -->
-                                    <% if (prognosticosTimeA[index] && prognosticosTimeA[index].pontos != null) { %>
-                                        <!-- Exibir os prognósticos -->
-                                        <td><%= prognosticosTimeA[index].pontos %></td>
-                                        <td><%= prognosticosTimeA[index].assistencias %></td>
-                                        <td><%= prognosticosTimeA[index].totReb %></td>
+                                    <!-- Inserir estatísticas -->
+                                    <% const prognosticoJogador = prognosticosTimeA.find(prognostico => prognostico.idJogador === jogador.idJogador); %>
+                                    <% if (prognosticoJogador && prognosticoJogador.pontos != null) { %>
+                                        <!-- Exibir as estatísticas -->
+                                        <td><%= prognosticoJogador.pontos %></td>
+                                        <td><%= prognosticoJogador.assistencias %></td>
+                                        <td><%= prognosticoJogador.totReb %></td>
                                     <% } else { %>
                                         <!-- Não há dados disponíveis -->
                                         <td>-</td>
@@ -586,6 +587,8 @@
                                 </tr>
                             <% }); %>
                         </table>
+                        
+                        
                     </div>
                     
                     <div class="team-table">
@@ -596,17 +599,18 @@
                                 <th>Assistências</th>
                                 <th>Rebotes</th>
                             </tr>
-                            <% timeBLineup.forEach((jogador, index) => { %>
+                            <% timeBLineup.forEach((jogador) => { %>
                                 <tr>
                                     <td>
-                                        <a href="/jogador/<%= timeA.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
+                                        <a href="/jogador/<%= timeB.idTime %>/<%= jogador.idJogador %>"><%= jogador.nome %> <%= jogador.sobrenome %></a>
                                     </td>
                                     <!-- Inserir estatísticas de pontos assistências e rebotes -->
-                                    <% if (prognosticosTimeB[index] && prognosticosTimeB[index].pontos != null) { %>
+                                    <% const prognosticoJogadorB = prognosticosTimeB.find(prognostico => prognostico.idJogador === jogador.idJogador); %>
+                                    <% if (prognosticoJogadorB && prognosticoJogadorB.pontos != null) { %>
                                         <!-- Exibir os statsJogador -->
-                                        <td><%= prognosticosTimeB[index].pontos %></td>
-                                        <td><%= prognosticosTimeB[index].assistencias %></td>
-                                        <td><%= prognosticosTimeB[index].totReb %></td>
+                                        <td><%= prognosticoJogadorB.pontos %></td>
+                                        <td><%= prognosticoJogadorB.assistencias %></td>
+                                        <td><%= prognosticoJogadorB.totReb %></td>
                                     <% } else { %>
                                         <!-- Não há dados disponíveis -->
                                         <td>-</td>
@@ -616,6 +620,7 @@
                                 </tr>
                             <% }); %>
                         </table>
+                        
                     </div>
                     
                 </div>
