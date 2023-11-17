@@ -228,8 +228,8 @@
                                                     <% const timeVisitante=times.find(time=> time.idTime ===
                                                         partida.visitor); %>
                                                         <td>
-                                                            <img src="<%= timeCasa ? timeCasa.logo : '' %>"
-                                                                alt="Logo Time da Casa" class="logo-image">
+                                                            <img src="<%= timeCasa ? timeCasa.logo : '' %>" alt="Logo Time da Casa"
+                                                                class="logo-image">
                                                             <span class="vs-text">X</span>
                                                             <img src="<%= timeVisitante ? timeVisitante.logo : '' %>"
                                                                 alt="Logo Time Visitante" class="logo-image">
@@ -237,13 +237,13 @@
                                             </tr>
                                             <% } %>
                                                 <% } %>
-                                                    <% } else { %>
+                                                    <% } else if (!Array.isArray(partidasDoDia) || partidasDoDia.length> 1) { %>
                                                         <!-- Exiba as partidas de partidasDoDia -->
                                                         <% for (const partida of partidasDoDia) { %>
                                                             <tr class="partida" data-id="<%= partida.idPartida %>">
                                                                 <td>
-                                                                    <%= ('0' + partida.date.getHours()).slice(-2) + ':'
-                                                                        + ('0' + partida.date.getMinutes()).slice(-2) %>
+                                                                    <%= ('0' + partida.date.getHours()).slice(-2) + ':' + ('0' +
+                                                                        partida.date.getMinutes()).slice(-2) %>
                                                                 </td>
                                                                 <!-- Encontre os logos dos times com base nos IDs dos times -->
                                                                 <% const timeCasa=times.find(time=> time.idTime ===
@@ -253,16 +253,20 @@
                                                                         partida.visitor); %>
                                                                         <td>
                                                                             <img src="<%= timeCasa ? timeCasa.logo : '' %>"
-                                                                                alt="Logo Time da Casa"
-                                                                                class="logo-image">
+                                                                                alt="Logo Time da Casa" class="logo-image">
                                                                             <span class="vs-text">X</span>
                                                                             <img src="<%= timeVisitante ? timeVisitante.logo : '' %>"
-                                                                                alt="Logo Time Visitante"
-                                                                                class="logo-image">
+                                                                                alt="Logo Time Visitante" class="logo-image">
                                                                         </td>
                                                             </tr>
                                                             <% } %>
-                                                                <% } %>
+                    
+                                                                <% } else { %>
+                                                                    
+                                                                        <tr>
+                                                                            <td colspan="2">Não há partidas hoje.</td>
+                                                                        </tr>
+                                                                        <% } %>
                     </tbody>
                 </table>
             </div>

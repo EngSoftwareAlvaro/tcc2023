@@ -335,9 +335,19 @@ app.get('/', async (req, res) => {
   const jogadores = await db.query('SELECT * FROM jogador');
   const partidas = await db.query('SELECT * FROM partidas');
   const gameday = await db.query('SELECT DISTINCT DATE(date) as date FROM partidas');
-  const partidasDoDia = '';
+  const today = new Date();
+  const formattedToday = today.toISOString().split('T')[0]; // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
-  res.render('home', {times, jogadores, partidas, gameday, partidasDoDia});
+  // Consulta o banco de dados para obter as partidas do dia
+  const partidasDoDia = await db.query('SELECT * FROM partidas WHERE DATE(DATE_FORMAT(date, "%Y-%m-%d")) = ?', [formattedToday]);
+
+  // Verifica se há partidas no dia
+  const partidasDoDiaIsEmpty = Array.isArray(partidasDoDia) && partidasDoDia.length === 0;
+
+  // Define partidasDoDia com o array ou uma string vazia, dependendo se há ou não partidas
+  const partidasDoDiaResult = partidasDoDiaIsEmpty ? [] : partidasDoDia;
+
+  res.render('home', {times, jogadores, partidas, gameday, partidasDoDia: partidasDoDiaResult });
 });
 
 // Defina a rota para "/:date" com uma restrição de data
@@ -350,10 +360,10 @@ app.get('/:date(\\d{4}-\\d{2}-\\d{2})', async (req, res) => {
   // Filtrar as partidas com base na data
   const partidas = await db.query('SELECT * FROM partidas');
   const partidasDoDia = await db.query('SELECT * FROM partidas WHERE DATE(DATE_FORMAT(date, "%Y-%m-%d")) = ?', [date]);
-  
+
   // Obtenha todas as datas distintas
   const gameday = await db.query('SELECT DISTINCT DATE(date) as date FROM partidas');
-  res.render('home', { times, jogadores, partidas, gameday, partidasDoDia });
+  res.render('home', { times, jogadores, partidas, gameday, partidasDoDia});
 });
 
 
