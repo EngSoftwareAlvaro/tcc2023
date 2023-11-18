@@ -8,11 +8,13 @@ async function fazerPrognostico(jogador) {
     WHERE idJogador = ?
     ORDER BY idTime, idJogador, idPartida DESC
     LIMIT 5;`,
-    [jogador.idJogador]
+    [jogador]
   );
 
   // Calcula a média das últimas 5 partidas
   const mediaUltimas5Partidas = calcularMedia(ultimas5Partidas);
+  // console.log("////////////");
+  // console.log(mediaUltimas5Partidas);
 
   // Calcula a média geral do jogador usando uma única consulta SQL
   const mediaQuery = `
@@ -24,21 +26,49 @@ async function fazerPrognostico(jogador) {
   WHERE idJogador = ?
 `;
 
-  const mediaGeral = await db.query(mediaQuery, [jogador.idJogador]);
-  const mediaGeralPontos = mediaGeral[0].mediaPontos;
-  const mediaGeralRebotes = mediaGeral[0].mediaTotReb;
-  const mediaGeralAssistencias = mediaGeral[0].mediaAssists;
-    
-  // Calcula o percentual de diferença entre as médias
-  const percentualDiferencaPontos = (mediaUltimas5Partidas.pontos - mediaGeralPontos) / mediaGeralPontos;
-  const percentualDiferencaRebotes = (mediaUltimas5Partidas.rebotes - mediaGeralRebotes) / mediaGeralRebotes;
-  const percentualDiferencaAssistencias = (mediaUltimas5Partidas.assistencias - mediaGeralAssistencias) / mediaGeralAssistencias;
+  const mediaGeral = await db.query(mediaQuery, [jogador]);
+  const mediaGeralPontos = mediaGeral[0].mediaPontos.toFixed(1);
+  const mediaGeralRebotes = mediaGeral[0].mediaTotReb.toFixed(1);
+  const mediaGeralAssistencias = mediaGeral[0].mediaAssists.toFixed(1);
+
+  // console.log("////////////");
+  // console.log(mediaGeralPontos);
+  // console.log("////////////");
+  // console.log(mediaGeralRebotes);
+  // console.log("////////////");
+  // console.log(mediaGeralAssistencias);
+
+  // Calcular a porcentagem de diferença
+const { porcentagemDiferenca } = calcularPorcentagemDiferenca(
+  mediaUltimas5Partidas,
+  { pontos: mediaGeralPontos, rebotes: mediaGeralRebotes, assistencias: mediaGeralAssistencias }
+);
+
+// Exibir os resultados
+// console.log('Porcentagem de Diferença:', porcentagemDiferenca);
+
+// Acessar as propriedades corretas
+const percentualDiferencaPontos = porcentagemDiferenca.pontos;
+const percentualDiferencaRebotes = porcentagemDiferenca.rebotes;
+const percentualDiferencaAssistencias = porcentagemDiferenca.assistencias;
+
+// Exibir os percentuais de diferença
+// console.log('Percentual de Diferença em Pontos:', percentualDiferencaPontos);
+// console.log('Percentual de Diferença em Rebotes:', percentualDiferencaRebotes);
+// console.log('Percentual de Diferença em Assistências:', percentualDiferencaAssistencias);
+
 
   // Calcula os prognósticos
-  const prognosticoPontos = Math.round(mediaUltimas5Partidas.pontos * (1 + percentualDiferencaPontos));
-  const prognosticoRebotes = Math.round(mediaUltimas5Partidas.rebotes * (1 + percentualDiferencaRebotes));
-  const prognosticoAssistencias = Math.round(mediaUltimas5Partidas.assistencias * (1 + percentualDiferencaAssistencias));
+  const prognosticoPontos = Math.round(mediaUltimas5Partidas.pontos * (1 + (percentualDiferencaPontos)));
+  const prognosticoRebotes = Math.round(mediaUltimas5Partidas.rebotes * (1 + (percentualDiferencaRebotes)));
+  const prognosticoAssistencias = Math.round(mediaUltimas5Partidas.assistencias * (1 + (percentualDiferencaAssistencias)));
 
+  // console.log("prognostico pontos");
+  // console.log(prognosticoPontos);
+  // console.log("////////////");
+  // console.log(prognosticoRebotes);
+  // console.log("////////////");
+  // console.log(prognosticoAssistencias);
   // Retorna os prognósticos
   return {
     pontos: prognosticoPontos,
@@ -70,5 +100,27 @@ function calcularMedia(partidas) {
     assistencias: mediaAssistencias,
   };
 }
+
+// Função para calcular a porcentagem de diferença
+function calcularPorcentagemDiferenca(mediaUltimas5, mediaGeral) {
+  const diferenca = {};
+  const porcentagemDiferenca = {};
+
+  // Calcular a diferença para cada componente
+  for (const componente in mediaUltimas5) {
+    diferenca[componente] = mediaUltimas5[componente] - mediaGeral[componente];
+  }
+
+  // Calcular a porcentagem de diferença para cada componente
+  for (const componente in diferenca) {
+    porcentagemDiferenca[componente] = (diferenca[componente] / mediaGeral[componente]);
+
+
+  }
+
+  return { porcentagemDiferenca };
+}
+
+
 
 module.exports = { fazerPrognostico };

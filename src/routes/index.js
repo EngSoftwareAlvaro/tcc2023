@@ -459,16 +459,16 @@ async function getStats(type, id) {
   }
 }
 
-// Agendamento das funções para as 6 da manhã todos os dias no horário de Brasília (GMT-3)
-cron.schedule('0 6 * * *', () => {
-  // A função será chamada todos os dias às 6:00 AM (GMT-3)
-  fetchAndSaveStatsForMultipleGames();
-});
+// // Agendamento das funções para as 6 da manhã todos os dias no horário de Brasília (GMT-3)
+// cron.schedule('0 6 * * *', () => {
+//   // A função será chamada todos os dias às 6:00 AM (GMT-3)
+//   fetchAndSaveStatsForMultipleGames();
+// });
 
-cron.schedule('30 6 * * *', () => {
-  // A segunda função também será chamada todos os dias às 6:00 AM (GMT-3)
-  fetchAndSavePlayerStatsForPastGames();
-});
+// cron.schedule('30 6 * * *', () => {
+//   // A segunda função também será chamada todos os dias às 6:00 AM (GMT-3)
+//   fetchAndSavePlayerStatsForPastGames();
+// });
 
 app.listen(process.env.PORT || 3000, () => {
   console.log('Servidor iniciado na porta 3000');
