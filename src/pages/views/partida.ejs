@@ -501,9 +501,10 @@
                                 <% if (nextGame && nextGame.length > 0) { %>
                                     <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString() || partida.date.toLocaleDateString() === hoje) { %>
                                       <!-- Exibir os prognósticos -->
-                                      <td><%= prognosticosTimeA[index].pontos.toFixed(2) %></td>
-                                      <td><%= prognosticosTimeA[index].assistencias.toFixed(2) %></td>
-                                      <td><%= prognosticosTimeA[index].rebotes.toFixed(2) %></td>
+                                      <td><%= isNaN(prognosticosTimeA[index].pontos) ? '-' : prognosticosTimeA[index].pontos.toFixed(2) %></td>
+                                      <td><%= isNaN(prognosticosTimeA[index].assistencias) ? '-' : prognosticosTimeA[index].assistencias.toFixed(2) %></td>
+                                      <td><%= isNaN(prognosticosTimeA[index].rebotes) ? '-' : prognosticosTimeA[index].rebotes.toFixed(2) %></td>
+
                                     <% } else { %>
                                       <!-- Não exibir os prognósticos -->
                                       
@@ -537,9 +538,9 @@
                                 <% if (nextGame && nextGame.length > 0) { %>
                                     <% if (nextGame[0].date.toLocaleDateString() === partida.date.toLocaleDateString() || partida.date.toLocaleDateString() === hoje) { %>
                                       <!-- Exibir os prognósticos -->
-                                      <td><%= prognosticosTimeB[index].pontos.toFixed(2) %></td>
-                                      <td><%= prognosticosTimeB[index].assistencias.toFixed(2) %></td>
-                                      <td><%= prognosticosTimeB[index].rebotes.toFixed(2) %></td>
+                                      <td><%= isNaN(prognosticosTimeB[index].pontos) ? '-' : prognosticosTimeB[index].pontos.toFixed(2) %></td>
+                                      <td><%= isNaN(prognosticosTimeB[index].assistencias) ? '-' : prognosticosTimeB[index].assistencias.toFixed(2) %></td>
+                                      <td><%= isNaN(prognosticosTimeB[index].rebotes) ? '-' : prognosticosTimeB[index].rebotes.toFixed(2) %></td>
                                     <% } else { %>
                                       
                                     <% } %>
