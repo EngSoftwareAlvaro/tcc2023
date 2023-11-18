@@ -8,7 +8,7 @@ async function fazerPrognostico(jogador) {
     WHERE idJogador = ?
     ORDER BY idTime, idJogador, idPartida DESC
     LIMIT 5;`,
-    [jogador]
+    [jogador.idJogador]
   );
 
   // Calcula a média das últimas 5 partidas
@@ -26,7 +26,7 @@ async function fazerPrognostico(jogador) {
   WHERE idJogador = ?
 `;
 
-  const mediaGeral = await db.query(mediaQuery, [jogador]);
+  const mediaGeral = await db.query(mediaQuery, [jogador.idJogador]);
   const mediaGeralPontos = mediaGeral[0].mediaPontos.toFixed(1);
   const mediaGeralRebotes = mediaGeral[0].mediaTotReb.toFixed(1);
   const mediaGeralAssistencias = mediaGeral[0].mediaAssists.toFixed(1);
