@@ -335,9 +335,10 @@ app.get('/', async (req, res) => {
   const jogadores = await db.query('SELECT * FROM jogador');
   const partidas = await db.query('SELECT * FROM partidas');
   const gameday = await db.query('SELECT DISTINCT DATE(date) as date FROM partidas');
-  const today = new Date();
+  let today = new Date();
+  today.setHours(today.getHours() - 4);
   const formattedToday = today.toISOString().split('T')[0]; // Obtém a data de hoje no formato 'YYYY-MM-DD'
-
+  console.log(formattedToday)
   // Consulta o banco de dados para obter as partidas do dia
   const partidasDoDia = await db.query('SELECT * FROM partidas WHERE DATE(DATE_FORMAT(date, "%Y-%m-%d")) = ?', [formattedToday]);
 
